@@ -1,0 +1,55 @@
+using DataBase.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+
+namespace DataBase.Controllers
+{
+    public class HomeController : Controller
+    {
+        private readonly ILogger<HomeController> _logger;
+        private readonly HotelDataBaseContext _context;
+
+        // Додаємо контекст для доступу до бази даних
+        public HomeController(ILogger<HomeController> logger, HotelDataBaseContext context)
+        {
+            _logger = logger;
+            _context = context;
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetRooms()
+        {
+            var rooms = await _context.Rooms
+                .Select(r => new
+                {
+                    r.RoomId,
+                    r.RoomType,
+                    r.Price,
+                    r.Description,
+                    r.RoomNumber,
+                    r.TypeAndNumber
+                })
+                .ToListAsync();
+
+            return Json(rooms);
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
+}
+

@@ -1,0 +1,71 @@
+﻿@model IEnumerable<DataBase.Models.Reservation>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<form asp-action="Index" method="get">
+    <p>
+        Find by name: <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
+        <input type="submit" value="Search" />
+    </p>
+</form>
+
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CheckInDateSortParm"]">Check In Date</a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckOutDate)
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["TotalPriceSortParm"]">Total Price</a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Room)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CheckInDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CheckOutDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalPrice)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Customer.FullName)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Room.TypeAndNumber)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ReservationId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ReservationId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ReservationId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

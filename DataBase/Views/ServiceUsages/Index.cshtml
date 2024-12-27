@@ -1,0 +1,51 @@
+﻿@model IEnumerable<DataBase.Models.ServiceUsage>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Service Usages</h1>
+
+<a asp-action="Create" class="btn btn-success mb-3">Add New</a>
+
+<!-- Форма для пошуку -->
+<form asp-action="Index" method="get">
+    <div class="form-group">
+        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Search by Customer FirstName or LastName" />
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+    <a asp-action="Index" class="btn btn-secondary">Reset</a>
+</form>
+
+<!-- Таблиця з можливістю сортування -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["ServiceSortParam"]">Service</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmployeeSortParam"]">Employee</a>
+            </th>
+            <th>
+                Customer
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Services.ServicesName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Employee.LastName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Customer.FullName)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.UsageId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.UsageId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.UsageId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

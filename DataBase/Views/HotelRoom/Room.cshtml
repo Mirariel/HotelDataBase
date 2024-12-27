@@ -1,0 +1,71 @@
+﻿@model DataBase.Models.Room
+
+@{
+    ViewData["Title"] = Model.RoomType;
+}
+
+<main>
+    <section class="room">
+        <div class="container">
+            <h2>@Model.RoomType</h2>
+            @if (Model.RoomId == 1)
+            {
+                <img class="Roomsimag" src="../../images/Standart.png" alt="Стандартний номер">
+            }
+            else if (Model.RoomId == 2)
+            {
+                <img class="Roomsimag" src="../../images/LuxRoom.png" alt="Люкс номер">
+            }
+            else if (Model.RoomId == 3)
+            {
+                <img class="Roomsimag" src="../../images/SuiteRoom.png" alt="Апартаменти">
+            }
+            else if (Model.RoomId == 4)
+            {
+                <img class="Roomsimag" src="../../images/SingleRoom.png" alt="Одномісний номер" >
+            }
+
+            <p class="price">Ціна: @Model.Price грн/ніч</p>
+            <p class="description">@Model.Description</p>
+        </div>
+    </section>
+
+    <section class="booking">
+        <div class="container reservationbtn">
+            <button onclick="openBookingModal()">Забронювати</button>
+        </div>
+    </section>
+</main>
+
+<!-- Модальне вікно для бронювання -->
+<div id="bookingModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeBookingModal()">&times;</span>
+        <div id="step1" class="form-step active">
+            <h3>Заповніть ваші дані</h3>
+            <input type="text" id="firstName" placeholder="Ім'я">
+            <input type="text" id="lastName" placeholder="Прізвище">
+            <input type="date" id="birthday" placeholder="Дата народження">
+            <input type="text" id="phone" placeholder="Телефон">
+            <input type="email" id="email" placeholder="Email">
+            <input type="text" id="passportNumber" placeholder="Номер паспорта">
+            <input type="text" id="address" placeholder="Адреса">
+            <button class="btnmodal" onclick="submitClientData()">Далі</button>
+        </div>
+
+        <div id="step2" class="form-step">
+            <h3>Виберіть дати бронювання</h3>
+            <input type="date" id="startDate" placeholder="Дата заїзду">
+            <input type="date" id="endDate" placeholder="Дата виїзду">
+            <button class="btnmodal" onclick="submitBooking()">Далі</button>
+            <button class="btnmodal" onclick="previousStep()">Назад</button>
+        </div>
+
+        <div id="step3" class="form-step">
+            <h3>Бронювання завершено!</h3>
+            <p>Дякуємо! Ваше бронювання успішно оформлено.</p>
+            <button class="btnmodal" onclick="closeBookingModal()">Закрити</button>
+        </div>
+    </div>
+</div>
+

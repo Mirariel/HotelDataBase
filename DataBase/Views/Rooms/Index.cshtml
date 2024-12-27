@@ -1,0 +1,68 @@
+﻿@model IEnumerable<DataBase.Models.Room>
+
+@{
+    ViewData["Title"] = "Rooms Index";
+}
+
+<h1>Rooms</h1>
+
+<p>
+    <a asp-action="Create">Create New Room</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["RoomTypeSortParm"]">Room Type</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CapacitySortParm"]">Capacity</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSortParm"]">Price</a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["IsAvailableSortParm"]">Is Available</a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var room in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => room.TypeAndNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => room.Capacity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => room.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => room.Description)
+                </td>
+                <td>
+                    @if (room.IsAvailable)
+                    {
+                        <span>&#10003;</span>
+                    }
+                    else
+                    {
+                        <span>&#10007;</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@room.RoomId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@room.RoomId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@room.RoomId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

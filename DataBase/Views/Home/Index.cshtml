@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center" id="homePageContainer">
+    <div class="container2" id="roomsSection">
+        <h2 style="text-align: center; margin: 30px 0;">Наші номери</h2>
+
+        <div class="slideshow-container">
+            <div class="slides">
+                <a href="@Url.Action("Room", "HotelRoom", new { id = 1 })">
+                    <img src="../images/Standart.png" alt="Стандартний номер">
+                    <div class="caption">Стандартний номер</div>
+                </a>
+            </div>
+            <div class="slides">
+                <a href="@Url.Action("Room", "HotelRoom", new { id = 2 })">
+                    <img src="../images/LuxRoom.png" alt="Люкс номер">
+                    <div class="caption">Люкс номер</div>
+                </a>
+            </div>
+            <div class="slides">
+                <a href="@Url.Action("Room", "HotelRoom", new { id = 3 })">
+                    <img src="~/images/SuiteRoom.png" alt="Апартаменти">
+                    <div class="caption">Апартаменти</div>
+                </a>
+            </div>
+            <div class="slides">
+                <a href="@Url.Action("Room", "HotelRoom", new { id = 4 })">
+                    <img src="../images/SingleRoom.png" alt="Одномісний номер">
+                    <div class="caption">Одномісний номер</div>
+                </a>
+            </div>
+
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/homescript.js"></script>
