@@ -74,8 +74,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/koshk/source/repos/DataBase/DataBase/Views/HotelRoom/Confirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG90ZWxSb29tXENvbmZpcm1hdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/koshk/source/repos/DataBase/DataBase/Views/HotelRoom/Room.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG90ZWxSb29tXFJvb20uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/koshk/source/repos/DataBase/DataBase/Views/HotelRoom/SelectCustomer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG90ZWxSb29tXFNlbGVjdEN1c3RvbWVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/koshk/source/repos/DataBase/DataBase/Views/HotelRoom/SelectDate.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG90ZWxSb29tXFNlbGVjdERhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/koshk/source/repos/DataBase/DataBase/Views/HotelRoom/SelectRoom.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG90ZWxSb29tXFNlbGVjdFJvb20uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/koshk/source/repos/DataBase/DataBase/Views/Reservations/Create.cshtml]

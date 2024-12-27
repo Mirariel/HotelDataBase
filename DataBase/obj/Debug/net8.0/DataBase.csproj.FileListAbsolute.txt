@@ -257,3 +257,4 @@ C:\Users\koshk\source\repos\DataBase\DataBase\obj\Debug\net8.0\refint\DataBase.d
 C:\Users\koshk\source\repos\DataBase\DataBase\obj\Debug\net8.0\DataBase.pdb
 C:\Users\koshk\source\repos\DataBase\DataBase\obj\Debug\net8.0\DataBase.genruntimeconfig.cache
 C:\Users\koshk\source\repos\DataBase\DataBase\obj\Debug\net8.0\ref\DataBase.dll
+C:\Users\koshk\source\repos\DataBase\DataBase\obj\Debug\net8.0\DataBase.sourcelink.json

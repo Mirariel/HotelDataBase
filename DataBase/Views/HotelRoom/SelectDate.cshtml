@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Оберіть дати";
+}
+
+<h2>Оберіть дати бронювання</h2>
+
+<form action="/HotelRoom/SelectRoom" method="get">
+    <input type="hidden" name="roomType" value="@ViewBag.RoomType" />
+    <label for="checkInDate">Дата заїзду:</label>
+    <input type="date" id="checkInDate" name="checkInDate" required />
+    <label for="checkOutDate">Дата виїзду:</label>
+    <input type="date" id="checkOutDate" name="checkOutDate" required />
+    <button type="submit">Переглянути доступні кімнати</button>
+</form>

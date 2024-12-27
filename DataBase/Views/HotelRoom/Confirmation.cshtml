@@ -1,0 +1,11 @@
+﻿@model dynamic
+
+<h2>Підтвердження бронювання</h2>
+<p>Номер бронювання: @Model.ReservationId</p>
+<p>Ім'я клієнта: @Model.CustomerName</p>
+<p>Номер кімнати: @Model.RoomNumber</p>
+<p>Тип кімнати: @Model.RoomType</p>
+<p>Дата заїзду: @Model.CheckInDate.ToShortDateString()</p>
+<p>Дата виїзду: @Model.CheckOutDate.ToShortDateString()</p>
+<p>Загальна сума: @Model.TotalPrice грн</p>
+<a href="/">Повернутися на головну</a>

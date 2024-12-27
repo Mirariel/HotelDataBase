@@ -1,71 +1,43 @@
-﻿@model DataBase.Models.Room
+﻿@model string
 
 @{
-    ViewData["Title"] = Model.RoomType;
+    ViewData["Title"] = Model;
 }
 
 <main>
     <section class="room">
         <div class="container">
-            <h2>@Model.RoomType</h2>
-            @if (Model.RoomId == 1)
+            <h2>@Model</h2>
+            @if (Model == "Standart")
             {
                 <img class="Roomsimag" src="../../images/Standart.png" alt="Стандартний номер">
+                <p class="description">Comfortable room with queen-sized bed, work desk, and private bathroom. Perfect for both business and leisure travelers.</p>
             }
-            else if (Model.RoomId == 2)
+            else if (Model == "Deluxe")
             {
                 <img class="Roomsimag" src="../../images/LuxRoom.png" alt="Люкс номер">
+                <p class="description">Luxurious room with king-sized bed, spacious seating area, modern bathroom, and private balcony. Ideal for those seeking comfort and elegance.</p>
             }
-            else if (Model.RoomId == 3)
+            else if (Model == "Suite")
             {
                 <img class="Roomsimag" src="../../images/SuiteRoom.png" alt="Апартаменти">
+                <p class="description">Spacious apartment with separate living and sleeping areas, fully equipped kitchen, and en-suite bathroom. Ideal for extended stays.</p>
             }
-            else if (Model.RoomId == 4)
+            else if (Model == "Single")
             {
                 <img class="Roomsimag" src="../../images/SingleRoom.png" alt="Одномісний номер" >
+                <p class="description">Cozy room for solo travelers with a single bed, work desk, and private bathroom. All essential amenities included.</p>
             }
 
-            <p class="price">Ціна: @Model.Price грн/ніч</p>
-            <p class="description">@Model.Description</p>
         </div>
     </section>
 
     <section class="booking">
         <div class="container reservationbtn">
-            <button onclick="openBookingModal()">Забронювати</button>
+            <a class="reservationref" href="@Url.Action("SelectDate", "HotelRoom", new {roomType = Model})">Забронювати</a>
         </div>
     </section>
+
 </main>
 
-<!-- Модальне вікно для бронювання -->
-<div id="bookingModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeBookingModal()">&times;</span>
-        <div id="step1" class="form-step active">
-            <h3>Заповніть ваші дані</h3>
-            <input type="text" id="firstName" placeholder="Ім'я">
-            <input type="text" id="lastName" placeholder="Прізвище">
-            <input type="date" id="birthday" placeholder="Дата народження">
-            <input type="text" id="phone" placeholder="Телефон">
-            <input type="email" id="email" placeholder="Email">
-            <input type="text" id="passportNumber" placeholder="Номер паспорта">
-            <input type="text" id="address" placeholder="Адреса">
-            <button class="btnmodal" onclick="submitClientData()">Далі</button>
-        </div>
-
-        <div id="step2" class="form-step">
-            <h3>Виберіть дати бронювання</h3>
-            <input type="date" id="startDate" placeholder="Дата заїзду">
-            <input type="date" id="endDate" placeholder="Дата виїзду">
-            <button class="btnmodal" onclick="submitBooking()">Далі</button>
-            <button class="btnmodal" onclick="previousStep()">Назад</button>
-        </div>
-
-        <div id="step3" class="form-step">
-            <h3>Бронювання завершено!</h3>
-            <p>Дякуємо! Ваше бронювання успішно оформлено.</p>
-            <button class="btnmodal" onclick="closeBookingModal()">Закрити</button>
-        </div>
-    </div>
-</div>
-
+<script src="~/js/reservationwindowscript.js"></script>

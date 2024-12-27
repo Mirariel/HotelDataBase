@@ -1,0 +1,70 @@
+﻿@model List<DataBase.Models.Room>
+
+@{
+    ViewData["Title"] = "Доступні кімнати";
+}
+
+<h2>Доступні кімнати</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<form action="/Hotel/CreateReservation" method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" name="checkInDate" value="@ViewBag.CheckInDate" />
+    <input type="hidden" name="checkOutDate" value="@ViewBag.CheckOutDate" />
+
+    <div class="room-selection">
+        <h3>Оберіть кімнату</h3>
+        <div class="form-group">
+            <label for="roomId">Кімнати:</label>
+            <select id="roomId" name="roomId" required>
+                <option value="" disabled selected>Оберіть кімнату</option>
+                @foreach (var room in Model)
+                {
+                    <option value="@room.RoomId">
+                        Кімната №@room.RoomNumber - Тип: @room.RoomType - Ціна: @room.Price грн/ніч
+                    </option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="user-details">
+        <h3>Ваші дані</h3>
+        <div class="form-group">
+            <label for="firstName">Ім'я:</label>
+            <input type="text" id="firstName" name="Customer.FirstName" placeholder="Ім'я" required />
+        </div>
+        <div class="form-group">
+            <label for="lastName">Прізвище:</label>
+            <input type="text" id="lastName" name="Customer.LastName" placeholder="Прізвище" required />
+        </div>
+        <div class="form-group">
+            <label for="passportNumber">Номер паспорта:</label>
+            <input type="text" id="passportNumber" name="Customer.PassportNumber" placeholder="Номер паспорта" required />
+        </div>
+        <div class="form-group">
+            <label for="birthday">Дата народження:</label>
+            <input type="date" id="birthday" name="Customer.Birthday" required />
+        </div>
+        <div class="form-group">
+            <label for="phone">Телефон:</label>
+            <input type="tel" id="phone" name="Customer.Phone" placeholder="Телефон" required />
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="Customer.Email" placeholder="Email" required />
+        </div>
+        <div class="form-group">
+            <label for="address">Адреса:</label>
+            <input type="text" id="address" name="Customer.Address" placeholder="Адреса" required />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Підтвердити бронювання</button>
+</form>
+

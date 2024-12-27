@@ -97,25 +97,23 @@ namespace DataBase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ReservationId,CustomerId,RoomId,CheckInDate,CheckOutDate")] Reservation reservation)
         {
-            // Перевірка на коректність дат
             if (reservation.CheckInDate >= reservation.CheckOutDate)
             {
                 ModelState.AddModelError("", "Check-out date must be after check-in date.");
             }
 
-            // Перевірка на перетин дат із існуючими резерваціями
-            var overlappingReservation = await _context.Reservations
-                .AnyAsync(r =>
-                    r.RoomId == reservation.RoomId &&
-                    r.CheckOutDate > reservation.CheckInDate &&
-                    r.CheckInDate < reservation.CheckOutDate);
+            // Перевірка доступності кімнати
+            var isRoomAvailable = !_context.Reservations.Any(r =>
+                r.RoomId == reservation.RoomId &&
+                r.CheckOutDate > reservation.CheckInDate &&
+                r.CheckInDate < reservation.CheckOutDate);
 
-            if (overlappingReservation)
+            if (!isRoomAvailable)
             {
                 ModelState.AddModelError("", "The selected room is already reserved for the specified dates.");
             }
 
-            // Завантажуємо кімнату, щоб отримати її ціну
+            // Отримання даних кімнати для розрахунку ціни
             var room = await _context.Rooms.FirstOrDefaultAsync(r => r.RoomId == reservation.RoomId);
             if (room == null)
             {
@@ -124,24 +122,20 @@ namespace DataBase.Controllers
 
             if (ModelState.IsValid)
             {
-                // Обчислюємо кількість днів
                 int numberOfDays = (reservation.CheckOutDate - reservation.CheckInDate).Days;
-
-                // Розрахунок TotalPrice (кількість днів * ціна за день)
                 reservation.TotalPrice = numberOfDays * room.Price;
 
-                // Додаємо резервацію в базу
                 _context.Add(reservation);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
 
-            // Передаємо дані для відображення у формі
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName", reservation.CustomerId);
             ViewData["RoomId"] = new SelectList(_context.Rooms, "RoomId", "TypeAndNumber", reservation.RoomId);
             return View(reservation);
         }
+
 
 
 

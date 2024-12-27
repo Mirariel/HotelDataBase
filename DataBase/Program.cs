@@ -32,42 +32,9 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-
-    endpoints.MapControllerRoute(
-        name: "customersRoute",
-        pattern: "Customers/{action=Index}/{id?}",
-        defaults: new { controller = "Customers" });
-
-    endpoints.MapControllerRoute(
-    name: "EmployeesRoute",
-    pattern: "Employees/{action=Index}/{id?}",
-    defaults: new { controller = "Employees" });
-
-    endpoints.MapControllerRoute(
-name: "ReservationsRoute",
-pattern: "Reservations/{action=Index}/{id?}",
-defaults: new { controller = "Reservations" });
-    
-    endpoints.MapControllerRoute(
-name: "RoomsRoute",
-pattern: "Rooms/{action=Index}/{id?}",
-defaults: new { controller = "Rooms" });
-    
-    endpoints.MapControllerRoute(
-name: "ServiceUsagesRoute",
-pattern: "ServiceUsages/{action=Index}/{id?}",
-defaults: new { controller = "ServiceUsages" });
-
-    endpoints.MapControllerRoute(
-        name: "HotelRoomRoute",
-        pattern: "HotelRoom/{action=Index}/{id?}",
-        defaults: new { controller = "HotelRoom" });
-});
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
 app.Run();

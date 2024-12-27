@@ -1,0 +1,23 @@
+﻿@model DataBase.Models.Customer
+
+@{
+    ViewData["Title"] = Model.CustomerId;
+}
+
+
+<span class="close" id="closeBookingModal">&times;</span>
+<form action="/HotelRoom/SelectCustomer" method="post">
+    @Html.AntiForgeryToken()
+
+    <div id="step1" class="form-step active">
+        <h3>Заповніть ваші дані</h3>
+        <input type="text" name="Customer.FirstName" id="firstName" placeholder="Ім'я" required>
+        <input type="text" name="Customer.LastName" id="lastName" placeholder="Прізвище" required>
+        <input type="date" name="Customer.Birthday" id="birthday" placeholder="Дата народження" required>
+        <input type="text" name="Customer.Phone" id="phone" placeholder="Телефон" required>
+        <input type="email" name="Customer.Email" id="email" placeholder="Email" required>
+        <input type="text" name="Customer.PassportNumber" id="passportNumber" placeholder="Номер паспорта" required>
+        <input type="text" name="Customer.Address" id="address" placeholder="Адреса" required>
+        <button type="button" class="btnmodal" id="goToStep2">Далі</button>
+    </div>
+</form>
