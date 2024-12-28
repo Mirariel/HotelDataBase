@@ -30,8 +30,7 @@ namespace DataBase.Controllers
                 {
                     r.RoomId,
                     r.RoomType,
-                    r.Price,
-                    r.Description,
+                    r.RoomType.Price,
                     r.RoomNumber,
                     r.TypeAndNumber
                 })

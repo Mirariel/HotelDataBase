@@ -7603,11 +7603,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\koshk\\source\\repos\\DataBase\\DataBase\\DataBase.csproj",
+      "projectUniqueName": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\DataBase.csproj",
       "projectName": "DataBase",
-      "projectPath": "C:\\Users\\koshk\\source\\repos\\DataBase\\DataBase\\DataBase.csproj",
+      "projectPath": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\DataBase.csproj",
       "packagesPath": "C:\\Users\\koshk\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\koshk\\source\\repos\\DataBase\\DataBase\\obj\\",
+      "outputPath": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

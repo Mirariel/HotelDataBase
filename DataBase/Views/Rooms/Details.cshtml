@@ -1,54 +1,74 @@
 ﻿@model DataBase.Models.Room
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Room Details";
 }
 
-<h1>Details</h1>
+<h1>Room Details</h1>
 
 <div>
     <h4>Room</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <!-- Room Number -->
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.RoomNumber)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RoomNumber)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RoomType)
+
+        <!-- Room Type -->
+        <dt class="col-sm-2">
+            Room Type
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RoomType)
+        <dd class="col-sm-10">
+            @Model.RoomType.TypeName
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Capacity)
+
+        <!-- Capacity -->
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RoomType.Capacity)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Capacity)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RoomType.Capacity)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
+
+        <!-- Price -->
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RoomType.Price)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RoomType.Price)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+
+        <!-- Description -->
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RoomType.Description)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RoomType.Description)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsAvailable)
+
+        <!-- Availability -->
+        <dt class="col-sm-2">
+            Status
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsAvailable)
+        <dd class="col-sm-10">
+            @if (Model.IsAvailable)
+            {
+                <span class="text-success">Available</span>
+            }
+            else
+            {
+                <span class="text-danger">Occupied</span>
+            }
         </dd>
     </dl>
 </div>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.RoomId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+

@@ -25,7 +25,7 @@ namespace DataBase.Controllers
             ViewData["EmployeeSortParam"] = sortOrder == "employee_desc" ? "employee_asc" : "employee_desc";
             ViewData["CurrentFilter"] = searchString;
 
-            var serviceUsages = _context.ServiceUsages
+            var serviceUsages = _context.ServiceUsage
                 .Include(s => s.Customer)
                 .Include(s => s.Services)
                 .Include(s => s.Employee)
@@ -62,7 +62,7 @@ namespace DataBase.Controllers
                 return NotFound();
             }
 
-            var serviceUsage = await _context.ServiceUsages
+            var serviceUsage = await _context.ServiceUsage
                 .Include(s => s.Customer)
                 .Include(s => s.Employee)
                 .Include(s => s.Services)
@@ -111,7 +111,7 @@ namespace DataBase.Controllers
                 return NotFound();
             }
 
-            var serviceUsage = await _context.ServiceUsages.FindAsync(id);
+            var serviceUsage = await _context.ServiceUsage.FindAsync(id);
             if (serviceUsage == null)
             {
                 return NotFound();
@@ -168,7 +168,7 @@ namespace DataBase.Controllers
                 return NotFound();
             }
 
-            var serviceUsage = await _context.ServiceUsages
+            var serviceUsage = await _context.ServiceUsage
                 .Include(s => s.Customer)
                 .Include(s => s.Employee)
                 .Include(s => s.Services)
@@ -186,10 +186,10 @@ namespace DataBase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var serviceUsage = await _context.ServiceUsages.FindAsync(id);
+            var serviceUsage = await _context.ServiceUsage.FindAsync(id);
             if (serviceUsage != null)
             {
-                _context.ServiceUsages.Remove(serviceUsage);
+                _context.ServiceUsage.Remove(serviceUsage);
             }
 
             await _context.SaveChangesAsync();
@@ -198,7 +198,7 @@ namespace DataBase.Controllers
 
         private bool ServiceUsageExists(int id)
         {
-            return _context.ServiceUsages.Any(e => e.UsageId == id);
+            return _context.ServiceUsage.Any(e => e.UsageId == id);
         }
     }
 }

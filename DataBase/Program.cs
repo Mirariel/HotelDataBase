@@ -1,5 +1,6 @@
 using DataBase.Models;
 using DataBase.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,17 @@ builder.Services.AddDbContext<HotelDataBaseContext>(options =>
 });
 
 builder.Services.AddHostedService<RoomAvailabilityUpdater>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.AccessDeniedPath = "/Error/403";
+        options.Cookie.HttpOnly = true;
+        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromDays(14);
+    });
 
 var app = builder.Build();
 

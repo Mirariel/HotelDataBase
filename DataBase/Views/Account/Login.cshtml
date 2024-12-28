@@ -1,0 +1,38 @@
+﻿@model DataBase.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Вхід до системи";
+}
+
+<h2>Вхід до системи</h2>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="error-message" style="color: red;">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+
+<form asp-action="Login" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label for="Email">Електронна пошта</label>
+        <input asp-for="Email" class="form-control" placeholder="example@mail.com" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Password">Пароль</label>
+        <input asp-for="Password" type="password" class="form-control" placeholder="Ваш пароль" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Увійти</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

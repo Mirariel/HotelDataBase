@@ -26,7 +26,7 @@
                 @foreach (var room in Model)
                 {
                     <option value="@room.RoomId">
-                        Кімната №@room.RoomNumber - Тип: @room.RoomType - Ціна: @room.Price грн/ніч
+                        Кімната  @room.RoomType - Ціна: @room.RoomType.Price грн/ніч
                     </option>
                 }
             </select>

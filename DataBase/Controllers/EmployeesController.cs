@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataBase.Models;
+using DataBase.Services;
 
 namespace DataBase.Controllers
 {
@@ -53,10 +54,12 @@ namespace DataBase.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmployeesId,FirstName,LastName,Position,Birthday,Phone,Email,HireDate,ResidencePlace,Education,Salary")] Employee employee)
+        public async Task<IActionResult> Create(Employee employee)
         {
             if (ModelState.IsValid)
             {
+                employee.PasswordHash=
+                PasswordHashService.HashPassword(employee.Password);
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

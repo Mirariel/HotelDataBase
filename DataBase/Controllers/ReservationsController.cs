@@ -26,16 +26,23 @@ namespace DataBase.Controllers
             ViewData["TotalPriceSortParm"] = sortOrder == "totalprice" ? "totalprice_desc" : "totalprice";
             ViewData["CurrentFilter"] = searchString;
 
-            var reservations = from r in _context.Reservations.Include(r => r.Customer).Include(r => r.Room)
-                               select r;
+            var reservations = _context.Reservation
+                .Include(r => r.Customer) 
+                .Include(r => r.Room)          
+                    .ThenInclude(room => room.RoomType)
+                .AsQueryable();
 
             // Фільтрація за ім'ям та прізвищем клієнта
-            if (!String.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
                 reservations = reservations.Where(r =>
                     r.Customer.FirstName.Contains(searchString) ||
                     r.Customer.LastName.Contains(searchString));
             }
+
+            // Виконуємо запит до бази даних
+            var result = await reservations.ToListAsync();
+
 
             // Сортування
             switch (sortOrder)
@@ -70,7 +77,7 @@ namespace DataBase.Controllers
                 return NotFound();
             }
 
-            var reservation = await _context.Reservations
+            var reservation = await _context.Reservation
                 .Include(r => r.Customer)
                 .Include(r => r.Room)
                 .FirstOrDefaultAsync(m => m.ReservationId == id);
@@ -86,7 +93,7 @@ namespace DataBase.Controllers
         public IActionResult Create()
         {
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName");
-            ViewData["RoomId"] = new SelectList(_context.Rooms, "RoomId", "TypeAndNumber");
+            ViewData["RoomId"] = new SelectList(_context.Rooms.Include(room=>room.RoomType), "RoomId", "TypeAndNumber");
             return View();
         }
 
@@ -103,7 +110,7 @@ namespace DataBase.Controllers
             }
 
             // Перевірка доступності кімнати
-            var isRoomAvailable = !_context.Reservations.Any(r =>
+            var isRoomAvailable = !_context.Reservation.Any(r =>
                 r.RoomId == reservation.RoomId &&
                 r.CheckOutDate > reservation.CheckInDate &&
                 r.CheckInDate < reservation.CheckOutDate);
@@ -114,7 +121,8 @@ namespace DataBase.Controllers
             }
 
             // Отримання даних кімнати для розрахунку ціни
-            var room = await _context.Rooms.FirstOrDefaultAsync(r => r.RoomId == reservation.RoomId);
+            var room = await _context.Rooms.Include(r => r.RoomType).FirstOrDefaultAsync(r => r.RoomId == reservation.RoomId);
+
             if (room == null)
             {
                 ModelState.AddModelError("", "Selected room does not exist.");
@@ -122,8 +130,10 @@ namespace DataBase.Controllers
 
             if (ModelState.IsValid)
             {
+
                 int numberOfDays = (reservation.CheckOutDate - reservation.CheckInDate).Days;
-                reservation.TotalPrice = numberOfDays * room.Price;
+                if(room.RoomType!=null)
+                reservation.TotalPrice = numberOfDays * room.RoomType.Price;
 
                 _context.Add(reservation);
                 await _context.SaveChangesAsync();
@@ -148,13 +158,13 @@ namespace DataBase.Controllers
                 return NotFound();
             }
 
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = await _context.Reservation.FindAsync(id);
             if (reservation == null)
             {
                 return NotFound();
             }
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName", reservation.CustomerId);
-            ViewData["RoomId"] = new SelectList(_context.Rooms, "RoomId", "TypeAndNumber", reservation.RoomId);
+            ViewData["RoomId"] = new SelectList(_context.Rooms.Include(room => room.RoomType), "RoomId", "TypeAndNumber", reservation.RoomId);
             return View(reservation);
         }
 
@@ -175,7 +185,9 @@ namespace DataBase.Controllers
                 ModelState.AddModelError("", "Check-out date must be after check-in date.");
             }
 
-            var room = await _context.Rooms.FirstOrDefaultAsync(r => r.RoomId == reservation.RoomId);
+
+            var room = await _context.Rooms.Include(r => r.RoomType).FirstOrDefaultAsync(r => r.RoomId == reservation.RoomId);
+
             if (room == null)
             {
                 ModelState.AddModelError("", "Selected room does not exist.");
@@ -187,9 +199,9 @@ namespace DataBase.Controllers
                 {
                     // Обчислюємо кількість днів
                     int numberOfDays = (reservation.CheckOutDate - reservation.CheckInDate).Days;
-
+                if(room.RoomType!=null)
                     // Розрахунок TotalPrice
-                    reservation.TotalPrice = numberOfDays * room.Price;
+                    reservation.TotalPrice = numberOfDays * room.RoomType.Price;
 
                     // Оновлюємо резервацію
                     _context.Update(reservation);
@@ -225,8 +237,8 @@ namespace DataBase.Controllers
                 return NotFound();
             }
 
-            var reservation = await _context.Reservations
-                .Include(r => r.Room) // Якщо є зв'язок з Room
+            var reservation = await _context.Reservation
+                .Include(r => r.Room)
                 .FirstOrDefaultAsync(m => m.ReservationId == id);
 
             if (reservation == null)
@@ -250,7 +262,7 @@ namespace DataBase.Controllers
 
         private bool ReservationExists(int id)
         {
-            return _context.Reservations.Any(e => e.ReservationId == id);
+            return _context.Reservation.Any(e => e.ReservationId == id);
         }
 
     }

@@ -10,18 +10,17 @@ public partial class Room
 
     public int RoomNumber { get; set; }
 
-    public string RoomType { get; set; } = null!;
-
-    public byte Capacity { get; set; }
-
-    public decimal Price { get; set; }
-
-    public string Description { get; set; } = null!;
+    public int RoomTypeId { get; set; } // Зовнішній ключ для RoomType
 
     public bool IsAvailable { get; set; }
 
+    // Навігаційна властивість для RoomType
+    public virtual RoomType ?RoomType { get; set; } = null!;
+
+    // Навігаційна властивість для Reservation
     public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 
+    // Властивість для відображення типу та номера кімнати
     [NotMapped]
-    public string TypeAndNumber => $"{RoomNumber} {RoomType}";
+    public string TypeAndNumber => $"{RoomNumber} - {RoomType?.TypeName}";
 }

@@ -93,11 +93,11 @@ namespace DataBase.Controllers
 
             // Шукаємо доступні кімнати
             var availableRooms = _context.Rooms
-                .Where(r => r.RoomType == roomType &&
+          /*      .Where(r => r.RoomType == roomType &&
                             !_context.Reservations.Any(res =>
                                 res.RoomId == r.RoomId &&
                                 ((checkInDate >= res.CheckInDate && checkInDate < res.CheckOutDate) ||
-                                 (checkOutDate > res.CheckInDate && checkOutDate <= res.CheckOutDate))))
+                                 (checkOutDate > res.CheckInDate && checkOutDate <= res.CheckOutDate)))) */
                 .ToList();
 
             if (!availableRooms.Any())
@@ -147,10 +147,10 @@ namespace DataBase.Controllers
                 RoomId = roomId,
                 CheckInDate = checkInDate,
                 CheckOutDate = checkOutDate,
-                TotalPrice = _context.Rooms.First(r => r.RoomId == roomId).Price * (decimal)(checkOutDate - checkInDate).TotalDays
+                TotalPrice = _context.Rooms.First(r => r.RoomId == roomId).RoomType.Price * (decimal)(checkOutDate - checkInDate).TotalDays
             };
 
-            _context.Reservations.Add(reservation);
+            _context.Reservation.Add(reservation);
             _context.SaveChanges();
 
             return RedirectToAction("Confirmation", new { reservationId = reservation.ReservationId });
@@ -159,7 +159,7 @@ namespace DataBase.Controllers
         [HttpGet]
         public IActionResult Confirmation(int reservationId)
         {
-            var reservation = _context.Reservations
+            var reservation = _context.Reservation
                 .Where(r => r.ReservationId == reservationId)
                 .Select(r => new
                 {
