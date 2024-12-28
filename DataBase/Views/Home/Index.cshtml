@@ -1,6 +1,4 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<DataBase.Models.RoomType>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -11,30 +9,20 @@
         <h2 style="text-align: center; margin: 30px 0;">Наші номери</h2>
 
         <div class="slideshow-container">
-            <div class="slides">
-                <a href="@Url.Action("Room", "HotelRoom", new { Type = "Standart" })">
-                    <img src="../images/Standart.png" alt="Стандартний номер">
-                    <div class="caption">Стандартний номер</div>
-                </a>
-            </div>
-            <div class="slides">
-                <a href="@Url.Action("Room", "HotelRoom", new { Type = "Deluxe" })">
-                    <img src="../images/LuxRoom.png" alt="Люкс номер">
-                    <div class="caption">Люкс номер</div>
-                </a>
-            </div>
-            <div class="slides">
-                <a href="@Url.Action("Room", "HotelRoom", new { Type = "Suite" })">
-                    <img src="~/images/SuiteRoom.png" alt="Апартаменти">
-                    <div class="caption">Апартаменти</div>
-                </a>
-            </div>
-            <div class="slides">
-                <a href="@Url.Action("Room", "HotelRoom", new { Type = "Single" })">
-                    <img src="../images/SingleRoom.png" alt="Одномісний номер">
-                    <div class="caption">Одномісний номер</div>
-                </a>
-            </div>
+            @foreach (var room in Model)
+            {
+                <div class="slides">
+                    <a href="@Url.Action("Room", "HotelRoom", new { Type = room.TypeId })">
+                        <img src="@(room.ImageUrl ?? "~/images/default-room.png")" alt="@room.TypeName">
+                        <div class="caption">
+                            <h3>@room.TypeName</h3>
+                            <p>@room.Description</p>
+                            <p><strong>Ціна:</strong> @room.Price грн</p>
+                            <p><strong>Місткість:</strong> @room.Capacity осіб</p>
+                        </div>
+                    </a>
+                </div>
+            }
 
             <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
             <a class="next" onclick="plusSlides(1)">&#10095;</a>
@@ -42,5 +30,5 @@
     </div>
 </div>
 
-
 <script src="~/js/homescript.js"></script>
+

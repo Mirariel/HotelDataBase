@@ -6,26 +6,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataBase.Models;
-using DataBase.Services;
 
 namespace DataBase.Controllers
 {
-    public class EmployeesController : Controller
+    public class RoomTypesController : Controller
     {
         private readonly HotelDataBaseContext _context;
 
-        public EmployeesController(HotelDataBaseContext context)
+        public RoomTypesController(HotelDataBaseContext context)
         {
             _context = context;
         }
 
-        // GET: Employees
+        // GET: RoomTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Employees.ToListAsync());
+            return View(await _context.RoomTypes.ToListAsync());
         }
 
-        // GET: Employees/Details/5
+        // GET: RoomTypes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,50 +32,39 @@ namespace DataBase.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees
-                .FirstOrDefaultAsync(m => m.EmployeesId == id);
-            if (employee == null)
+            var roomType = await _context.RoomTypes
+                .FirstOrDefaultAsync(m => m.TypeId == id);
+            if (roomType == null)
             {
                 return NotFound();
             }
 
-            return View(employee);
+            return View(roomType);
         }
 
-        // GET: Employees/Create
+        // GET: RoomTypes/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Employees/Create
+        // POST: RoomTypes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Employee employee)
+        public async Task<IActionResult> Create([Bind("TypeId,TypeName,Price,Description,Capacity,ImageUrl")] RoomType roomType)
         {
             if (ModelState.IsValid)
             {
-                if (string.IsNullOrWhiteSpace(employee.Password))
-                {
-                    ModelState.AddModelError("Password", "Пароль є обов'язковим.");
-                    return View(employee);
-                }
-
-                employee.PasswordHash = PasswordHashService.HashPassword(employee.Password);
-
-                _context.Add(employee);
+                _context.Add(roomType);
                 await _context.SaveChangesAsync();
-
                 return RedirectToAction(nameof(Index));
             }
-
-            return View(employee);
+            return View(roomType);
         }
 
-
-        // GET: Employees/Edit/5
+        // GET: RoomTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,39 +72,36 @@ namespace DataBase.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null)
+            var roomType = await _context.RoomTypes.FindAsync(id);
+            if (roomType == null)
             {
                 return NotFound();
             }
-            return View(employee);
+            return View(roomType);
         }
 
-        // POST: Employees/Edit/5
+        // POST: RoomTypes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("TypeId,TypeName,Price,Description,Capacity,ImageUrl")] RoomType roomType)
         {
-            if (id != employee.EmployeesId)
+            if (id != roomType.TypeId)
             {
                 return NotFound();
             }
-             if (employee.Password!=null)
-            {
-                employee.PasswordHash=PasswordHashService.HashPassword(employee.Password);
-            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(employee);
+                    _context.Update(roomType);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeExists(employee.EmployeesId))
+                    if (!RoomTypeExists(roomType.TypeId))
                     {
                         return NotFound();
                     }
@@ -127,10 +112,10 @@ namespace DataBase.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(roomType);
         }
 
-        // GET: Employees/Delete/5
+        // GET: RoomTypes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -138,34 +123,34 @@ namespace DataBase.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees
-                .FirstOrDefaultAsync(m => m.EmployeesId == id);
-            if (employee == null)
+            var roomType = await _context.RoomTypes
+                .FirstOrDefaultAsync(m => m.TypeId == id);
+            if (roomType == null)
             {
                 return NotFound();
             }
 
-            return View(employee);
+            return View(roomType);
         }
 
-        // POST: Employees/Delete/5
+        // POST: RoomTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee != null)
+            var roomType = await _context.RoomTypes.FindAsync(id);
+            if (roomType != null)
             {
-                _context.Employees.Remove(employee);
+                _context.RoomTypes.Remove(roomType);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EmployeeExists(int id)
+        private bool RoomTypeExists(int id)
         {
-            return _context.Employees.Any(e => e.EmployeesId == id);
+            return _context.RoomTypes.Any(e => e.TypeId == id);
         }
     }
 }

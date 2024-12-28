@@ -1,11 +1,17 @@
 ﻿@model dynamic
 
-<h2>Підтвердження бронювання</h2>
-<p>Номер бронювання: @Model.ReservationId</p>
-<p>Ім'я клієнта: @Model.CustomerName</p>
-<p>Номер кімнати: @Model.RoomNumber</p>
-<p>Тип кімнати: @Model.RoomType</p>
-<p>Дата заїзду: @Model.CheckInDate.ToShortDateString()</p>
-<p>Дата виїзду: @Model.CheckOutDate.ToShortDateString()</p>
-<p>Загальна сума: @Model.TotalPrice грн</p>
-<a href="/">Повернутися на головну</a>
+<h2 id="reservationTitle">Підтвердження бронювання</h2>
+
+<div id="reservationDetails" class="reservation-container">
+    <p id="reservationId"><strong>Номер бронювання:</strong> @Model.ReservationId</p>
+    <p id="customerName"><strong>Ім'я клієнта:</strong> @Model.CustomerName</p>
+    <p id="roomNumber"><strong>Номер кімнати:</strong> @Model.RoomNumber</p>
+    <p id="roomType"><strong>Тип кімнати:</strong> @Model.RoomType.Name</p>
+    <p id="checkInDate"><strong>Дата заїзду:</strong> @Model.CheckInDate.ToShortDateString()</p>
+    <p id="checkOutDate"><strong>Дата виїзду:</strong> @Model.CheckOutDate.ToShortDateString()</p>
+    <p id="totalPrice"><strong>Загальна сума:</strong> @Model.TotalPrice грн</p>
+</div>
+
+<div class="return-home">
+    <a id="returnHomeLink" href="/" class="btn btn-primary">Повернутися на головну</a>
+</div>

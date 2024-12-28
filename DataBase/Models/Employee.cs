@@ -24,7 +24,7 @@ public partial class Employee
     public string Email { get; set; } = null!;
     public string ?PasswordHash { get; set; } = null!;
     [NotMapped]
-    public string Password { get; set; } = null!;
+    public string ?Password { get; set; } = null!;
 
     public DateTime HireDate { get; set; }
 

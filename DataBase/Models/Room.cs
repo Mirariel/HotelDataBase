@@ -12,7 +12,7 @@ public partial class Room
 
     public int RoomTypeId { get; set; } // Зовнішній ключ для RoomType
 
-    public bool IsAvailable { get; set; }
+    public bool IsAvailable { get; set; } = true;
 
     // Навігаційна властивість для RoomType
     public virtual RoomType ?RoomType { get; set; } = null!;

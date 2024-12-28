@@ -4,11 +4,16 @@
 
 <h2>Оберіть дати бронювання</h2>
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
 <form action="/HotelRoom/SelectRoom" method="get">
     <input type="hidden" name="roomType" value="@ViewBag.RoomType" />
     <label for="checkInDate">Дата заїзду:</label>
-    <input type="date" id="checkInDate" name="checkInDate" required />
+    <input type="date" id="checkInDate" name="checkInDate" value="@ViewBag.CheckInDate" required />
     <label for="checkOutDate">Дата виїзду:</label>
-    <input type="date" id="checkOutDate" name="checkOutDate" required />
+    <input type="date" id="checkOutDate" name="checkOutDate" value="@ViewBag.CheckOutDate" required />
     <button type="submit">Переглянути доступні кімнати</button>
 </form>

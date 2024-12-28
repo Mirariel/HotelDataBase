@@ -10,57 +10,56 @@
     <a asp-action="Create">Create New Room</a>
 </p>
 
-@foreach (var group in Model.GroupBy(r => r.RoomType))
-{
-    <h2>@group.Key</h2>
-    <table class="table">
-        <thead>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Room Type
+            </th>
+            <th>
+                Room Number
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Capacity
+            </th>
+            <th>
+                Is Available
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var room in Model)
+        {
             <tr>
-                <th>
-                    Room Number
-                </th>
-                <th>
-                    Price
-                </th>
-                <th>
-                    Capacity
-                </th>
-                <th>
-                    Is Available
-                </th>
-                <th></th>
+                <td>
+                    @room.TypeAndNumber
+                </td>
+                <td>
+                    @room.RoomType.Price.ToString("C")
+                </td>
+                <td>
+                    @room.RoomType.Capacity
+                </td>
+                <td>
+                    @if (room.IsAvailable)
+                    {
+                        <span class="text-success">Available</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Occupied</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@room.RoomId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@room.RoomId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@room.RoomId">Delete</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var room in group)
-            {
-                <tr>
-                    <td>
-                        @room.TypeAndNumber
-                    </td>
-                    <td>
-                        @room.RoomType.Price.ToString("C")
-                    </td>
-                    <td>
-                        @room.RoomType.Capacity
-                    </td>
-                    <td>
-                        @if (room.IsAvailable)
-                        {
-                            <span class="text-success">Available</span>
-                        }
-                        else
-                        {
-                            <span class="text-danger">Occupied</span>
-                        }
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@room.RoomId">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@room.RoomId">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@room.RoomId">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+        }
+    </tbody>
+</table>

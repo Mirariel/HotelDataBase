@@ -11,7 +11,7 @@
     <div class="alert alert-danger">@TempData["Error"]</div>
 }
 
-<form action="/Hotel/CreateReservation" method="post">
+<form asp-action="CreateReservation" method="post">
     @Html.AntiForgeryToken()
 
     <input type="hidden" name="checkInDate" value="@ViewBag.CheckInDate" />
@@ -26,7 +26,7 @@
                 @foreach (var room in Model)
                 {
                     <option value="@room.RoomId">
-                        Кімната  @room.RoomType - Ціна: @room.RoomType.Price грн/ніч
+                        Кімната  @room.RoomType.TypeName - Ціна: @room.RoomType.Price грн/ніч
                     </option>
                 }
             </select>

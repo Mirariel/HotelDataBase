@@ -1,43 +1,25 @@
-﻿@model string
+﻿@model DataBase.Models.RoomType
 
 @{
-    ViewData["Title"] = Model;
+    ViewData["Title"] = Model.TypeName;
 }
 
 <main>
     <section class="room">
         <div class="container">
-            <h2>@Model</h2>
-            @if (Model == "Standart")
-            {
-                <img class="Roomsimag" src="../../images/Standart.png" alt="Стандартний номер">
-                <p class="description">Comfortable room with queen-sized bed, work desk, and private bathroom. Perfect for both business and leisure travelers.</p>
-            }
-            else if (Model == "Deluxe")
-            {
-                <img class="Roomsimag" src="../../images/LuxRoom.png" alt="Люкс номер">
-                <p class="description">Luxurious room with king-sized bed, spacious seating area, modern bathroom, and private balcony. Ideal for those seeking comfort and elegance.</p>
-            }
-            else if (Model == "Suite")
-            {
-                <img class="Roomsimag" src="../../images/SuiteRoom.png" alt="Апартаменти">
-                <p class="description">Spacious apartment with separate living and sleeping areas, fully equipped kitchen, and en-suite bathroom. Ideal for extended stays.</p>
-            }
-            else if (Model == "Single")
-            {
-                <img class="Roomsimag" src="../../images/SingleRoom.png" alt="Одномісний номер" >
-                <p class="description">Cozy room for solo travelers with a single bed, work desk, and private bathroom. All essential amenities included.</p>
-            }
-
+            <h2>@Model.TypeName</h2>
+            <img class="Roomsimag" src="@(Model.ImageUrl ?? "~/images/default-room.png")" alt="@Model.TypeName">
+            <p class="description">@Model.Description</p>
+            <p class="price">Ціна: @Model.Price грн</p>
+            <p class="capacity">Місткість: @Model.Capacity</p>
         </div>
     </section>
 
     <section class="booking">
         <div class="container reservationbtn">
-            <a class="reservationref" href="@Url.Action("SelectDate", "HotelRoom", new {roomType = Model})">Забронювати</a>
+            <a class="reservationref" href="@Url.Action("SelectDate", "HotelRoom", new { roomType = Model.TypeId })">Забронювати</a>
         </div>
     </section>
-
 </main>
 
 <script src="~/js/reservationwindowscript.js"></script>

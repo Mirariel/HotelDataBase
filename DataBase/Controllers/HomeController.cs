@@ -17,10 +17,13 @@ namespace DataBase.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var roomTypes = await _context.RoomTypes.ToListAsync();
+            return View(roomTypes);
         }
+
+
 
         [HttpGet]
         public async Task<IActionResult> GetRooms()

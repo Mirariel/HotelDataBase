@@ -10,30 +10,62 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
+                <!-- Логотип -->
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DataBase</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+                <!-- Кнопка меню для мобільних -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Customers" asp-action="Index">Відвідувачі</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index">Робітники</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Reservations" asp-action="Index">Резервація</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Rooms" asp-action="Index">Кімнати</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ServiceUsages" asp-action="Index">Замовлені сервіси</a>
-                        </li>
+
+                <!-- Меню -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <!-- Ліве меню -->
+                    @if (Context.User.Identity.IsAuthenticated)
+                    {
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Customers" asp-action="Index">Відвідувачі</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index">Робітники</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Reservations" asp-action="Index">Резервація</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Rooms" asp-action="Index">Кімнати</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ServiceUsages" asp-action="Index">Замовлені сервіси</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="RoomTypes" asp-action="Index">Типи кімнат</a>
+                            </li>
+                        </ul>
+                    }
+
+                    <!-- Праве меню -->
+                    <ul class="navbar-nav ms-auto">
+                        @if (Context.User.Identity.IsAuthenticated)
+                        {
+                            var userName = Context.User.Identity?.Name;
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Profile">@userName</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-primary nav-link px-3" asp-area="" asp-controller="Account" asp-action="Logout">Вийти</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="btn btn-outline-primary nav-link px-3" asp-area="" asp-controller="Account" asp-action="Login">Увійти</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

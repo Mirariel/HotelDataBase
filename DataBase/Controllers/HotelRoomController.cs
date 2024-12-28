@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DataBase.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataBase.Controllers
 {
@@ -12,16 +13,19 @@ namespace DataBase.Controllers
             _context = context;
         }
 
-        public IActionResult Room(string type)
+        public async Task<IActionResult> Room(int type)
         {
+            var roomType = await _context.RoomTypes
+                .FirstOrDefaultAsync(rt => rt.TypeId == type);
 
-            if (type == null)
+            if (roomType == null)
             {
-                return View("NotFound");
+                return NotFound();
             }
 
-            return View((object) type);
+            return View(roomType);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -73,45 +77,46 @@ namespace DataBase.Controllers
         }
 
         [HttpGet]
-        public IActionResult SelectRoomType()
+        public IActionResult SelectRoom(int roomType, DateTime checkInDate, DateTime checkOutDate)
         {
-            var roomTypes = _context.Rooms
-                .Select(r => r.RoomType)
-                .Distinct()
-                .ToList();
-
-            return View(roomTypes);
-        }
-
-        [HttpGet]
-        public IActionResult SelectRoom(string roomType, DateTime checkInDate, DateTime checkOutDate)
-        {
-            if (string.IsNullOrWhiteSpace(roomType) || checkInDate == default || checkOutDate == default)
+            // Перевірка на коректність введених даних
+            if (checkInDate == default || checkOutDate == default || checkInDate >= checkOutDate)
             {
-                return RedirectToAction("Index", "Home");
+                ViewBag.RoomType = roomType;
+                ViewBag.CheckInDate = checkInDate == default ? "" : checkInDate.ToString("yyyy-MM-dd");
+                ViewBag.CheckOutDate = checkOutDate == default ? "" : checkOutDate.ToString("yyyy-MM-dd");
+                TempData["Error"] = "Будь ласка, введіть правильні дати.";
+                return View("SelectDate"); // Повернення до форми вибору дат
             }
 
-            // Шукаємо доступні кімнати
+            // Пошук доступних кімнат
             var availableRooms = _context.Rooms
-          /*      .Where(r => r.RoomType == roomType &&
-                            !_context.Reservations.Any(res =>
+                .Include(r => r.RoomType)
+                .Where(r => r.RoomType.TypeId == roomType &&
+                            !_context.Reservation.Any(res =>
                                 res.RoomId == r.RoomId &&
                                 ((checkInDate >= res.CheckInDate && checkInDate < res.CheckOutDate) ||
-                                 (checkOutDate > res.CheckInDate && checkOutDate <= res.CheckOutDate)))) */
+                                 (checkOutDate > res.CheckInDate && checkOutDate <= res.CheckOutDate))))
                 .ToList();
 
+            // Якщо кімнат немає, залишаємо на тій же сторінці з повідомленням
             if (!availableRooms.Any())
             {
-                TempData["Error"] = "На жаль, немає доступних кімнат для обраного типу.";
-                return RedirectToAction("Index", "Home");
+                ViewBag.RoomType = roomType;
+                ViewBag.CheckInDate = checkInDate.ToString("yyyy-MM-dd");
+                ViewBag.CheckOutDate = checkOutDate.ToString("yyyy-MM-dd");
+                TempData["Error"] = "На жаль, немає доступних кімнат для обраного типу. Спробуйте вибрати інші дати.";
+                return View("SelectDate"); // Повернення до форми вибору дат з повідомленням
             }
 
-            ViewBag.RoomType = roomType;
-            ViewBag.CheckInDate = checkInDate;
-            ViewBag.CheckOutDate = checkOutDate;
-
+            // Передача даних до View для відображення доступних кімнат
+            ViewBag.CheckInDate = checkInDate.ToString("yyyy-MM-dd");
+            ViewBag.CheckOutDate = checkOutDate.ToString("yyyy-MM-dd");
             return View(availableRooms);
         }
+
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -147,7 +152,7 @@ namespace DataBase.Controllers
                 RoomId = roomId,
                 CheckInDate = checkInDate,
                 CheckOutDate = checkOutDate,
-                TotalPrice = _context.Rooms.First(r => r.RoomId == roomId).RoomType.Price * (decimal)(checkOutDate - checkInDate).TotalDays
+                TotalPrice = _context.Rooms.Include(r=>r.RoomType).FirstOrDefault(r => r.RoomId == roomId).RoomType.Price * (decimal)(checkOutDate - checkInDate).TotalDays
             };
 
             _context.Reservation.Add(reservation);
