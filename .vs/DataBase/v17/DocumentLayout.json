@@ -3,12 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|c:\\users\\koshk\\source\\repos\\hoteldatabase\\database\\controllers\\serviceusagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|solutionrelative:database\\controllers\\serviceusagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|c:\\users\\koshk\\source\\repos\\hoteldatabase\\database\\views\\serviceforcustomer\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|solutionrelative:database\\views\\serviceforcustomer\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|c:\\users\\koshk\\source\\repos\\hoteldatabase\\database\\views\\serviceusages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|solutionrelative:database\\views\\serviceusages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|c:\\users\\koshk\\source\\repos\\hoteldatabase\\database\\views\\shared\\error.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|solutionrelative:database\\views\\shared\\error.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|c:\\users\\koshk\\source\\repos\\hoteldatabase\\database\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|solutionrelative:database\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|c:\\users\\koshk\\source\\repos\\hoteldatabase\\database\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|solutionrelative:database\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|c:\\users\\koshk\\source\\repos\\hoteldatabase\\database\\controllers\\serviceforcustomercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|solutionrelative:database\\controllers\\serviceforcustomercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|c:\\users\\koshk\\source\\repos\\hoteldatabase\\database\\controllers\\serviceusagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|solutionrelative:database\\controllers\\serviceusagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3200A73E-E63A-4F86-9A07-D83FF86C2F25}|DataBase\\DataBase.csproj|c:\\users\\koshk\\source\\repos\\hoteldatabase\\database\\models\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -46,7 +66,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Bookmark",
@@ -63,6 +83,45 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "Error.cshtml",
+              "DocumentMoniker": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Views\\Shared\\Error.cshtml",
+              "RelativeDocumentMoniker": "DataBase\\Views\\Shared\\Error.cshtml",
+              "ToolTip": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Views\\Shared\\Error.cshtml",
+              "RelativeToolTip": "DataBase\\Views\\Shared\\Error.cshtml",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-12-29T00:26:15.686Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "DataBase\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "DataBase\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-12-29T00:26:06.12Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "site.css",
+              "DocumentMoniker": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\wwwroot\\css\\site.css",
+              "RelativeDocumentMoniker": "DataBase\\wwwroot\\css\\site.css",
+              "ToolTip": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\wwwroot\\css\\site.css",
+              "RelativeToolTip": "DataBase\\wwwroot\\css\\site.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcBAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2024-12-29T00:21:53.13Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Reservation.cs",
               "DocumentMoniker": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Models\\Reservation.cs",
               "RelativeDocumentMoniker": "DataBase\\Models\\Reservation.cs",
@@ -70,12 +129,11 @@
               "RelativeToolTip": "DataBase\\Models\\Reservation.cs",
               "ViewState": "AgIAABQAAAAAAAAAAAAswB4AAACBAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-28T23:59:18.756Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-28T23:59:18.756Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "ReservationsController.cs",
               "DocumentMoniker": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Controllers\\ReservationsController.cs",
               "RelativeDocumentMoniker": "DataBase\\Controllers\\ReservationsController.cs",
@@ -83,12 +141,11 @@
               "RelativeToolTip": "DataBase\\Controllers\\ReservationsController.cs",
               "ViewState": "AgIAANMAAAAAAAAAAAAwwOkAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-28T23:50:46.285Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-28T23:50:46.285Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 12,
               "Title": "Details.cshtml",
               "DocumentMoniker": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Views\\ServiceUsages\\Details.cshtml",
               "RelativeDocumentMoniker": "DataBase\\Views\\ServiceUsages\\Details.cshtml",
@@ -96,12 +153,11 @@
               "RelativeToolTip": "DataBase\\Views\\ServiceUsages\\Details.cshtml",
               "ViewState": "AgIAABUAAAAAAAAAAAAowCoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-28T23:32:51.181Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-28T23:32:51.181Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 13,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Views\\ServiceUsages\\Edit.cshtml",
               "RelativeDocumentMoniker": "DataBase\\Views\\ServiceUsages\\Edit.cshtml",
@@ -109,21 +165,7 @@
               "RelativeToolTip": "DataBase\\Views\\ServiceUsages\\Edit.cshtml",
               "ViewState": "AgIAABYAAAAAAAAAAAAowDMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-28T23:31:08.6Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ServiceUsagesController.cs",
-              "DocumentMoniker": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Controllers\\ServiceUsagesController.cs",
-              "RelativeDocumentMoniker": "DataBase\\Controllers\\ServiceUsagesController.cs",
-              "ToolTip": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Controllers\\ServiceUsagesController.cs",
-              "RelativeToolTip": "DataBase\\Controllers\\ServiceUsagesController.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAAwCMAAAApAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-28T23:29:39.486Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-28T23:31:08.6Z"
             },
             {
               "$type": "Document",
@@ -133,14 +175,53 @@
               "RelativeDocumentMoniker": "DataBase\\Views\\ServiceUsages\\Index.cshtml",
               "ToolTip": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Views\\ServiceUsages\\Index.cshtml",
               "RelativeToolTip": "DataBase\\Views\\ServiceUsages\\Index.cshtml",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAmwDUAAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAADYAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-12-28T23:28:34.732Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Views\\ServiceForCustomer\\Index.cshtml",
+              "RelativeDocumentMoniker": "DataBase\\Views\\ServiceForCustomer\\Index.cshtml",
+              "ToolTip": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Views\\ServiceForCustomer\\Index.cshtml",
+              "RelativeToolTip": "DataBase\\Views\\ServiceForCustomer\\Index.cshtml",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAowBsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-12-29T00:20:09.298Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 5,
+              "Title": "ServiceForCustomerController.cs",
+              "DocumentMoniker": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Controllers\\ServiceForCustomerController.cs",
+              "RelativeDocumentMoniker": "DataBase\\Controllers\\ServiceForCustomerController.cs",
+              "ToolTip": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Controllers\\ServiceForCustomerController.cs",
+              "RelativeToolTip": "DataBase\\Controllers\\ServiceForCustomerController.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAwBkAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-29T00:15:56.779Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ServiceUsagesController.cs",
+              "DocumentMoniker": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Controllers\\ServiceUsagesController.cs",
+              "RelativeDocumentMoniker": "DataBase\\Controllers\\ServiceUsagesController.cs",
+              "ToolTip": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Controllers\\ServiceUsagesController.cs",
+              "RelativeToolTip": "DataBase\\Controllers\\ServiceUsagesController.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAAwCQAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-28T23:29:39.486Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "HotelDataBaseContext.cs",
               "DocumentMoniker": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Models\\HotelDataBaseContext.cs",
               "RelativeDocumentMoniker": "DataBase\\Models\\HotelDataBaseContext.cs",
@@ -148,12 +229,11 @@
               "RelativeToolTip": "DataBase\\Models\\HotelDataBaseContext.cs",
               "ViewState": "AgIAABIAAAAAAAAAAIAzwBsAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-28T23:17:13.089Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-28T23:17:13.089Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 11,
               "Title": "Create.cshtml",
               "DocumentMoniker": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Views\\ServiceUsages\\Create.cshtml",
               "RelativeDocumentMoniker": "DataBase\\Views\\ServiceUsages\\Create.cshtml",
@@ -161,12 +241,11 @@
               "RelativeToolTip": "DataBase\\Views\\ServiceUsages\\Create.cshtml",
               "ViewState": "AgIAABsAAAAAAAAAAAAowDIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-28T23:34:49.301Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-28T23:34:49.301Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 9,
               "Title": "ServiceUsage.cs",
               "DocumentMoniker": "C:\\Users\\koshk\\source\\repos\\HotelDataBase\\DataBase\\Models\\ServiceUsage.cs",
               "RelativeDocumentMoniker": "DataBase\\Models\\ServiceUsage.cs",
@@ -174,8 +253,7 @@
               "RelativeToolTip": "DataBase\\Models\\ServiceUsage.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-28T23:27:44.748Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-28T23:27:44.748Z"
             }
           ]
         }

@@ -13,18 +13,18 @@ namespace DataBase.Controllers
             _context = context;
         }
 
-        public IActionResult Index(int customerId)
+        public IActionResult Index()
         {
-            var today = DateTime.Today;
+            //var today = DateTime.Today;
 
-            var hasBookingToday = _context.Reservation
-                .Any(b => b.CustomerId == customerId && b.CheckInDate <= today && b.CheckOutDate>=today);
+            //var hasBookingToday = _context.Reservation
+            //    .Any(b => b.CustomerId == customerId && b.CheckInDate <= today && b.CheckOutDate>=today);
 
-            if (!hasBookingToday)
-            {
-                ViewBag.ErrorMessage = "У вас немає бронювань на сьогодні.";
-                return View("NoBooking");
-            }
+            //if (!hasBookingToday)
+            //{
+            //    ViewBag.ErrorMessage = "У вас немає бронювань на сьогодні.";
+            //    return View("NoBooking");
+            //}
 
             // Отримуємо список доступних послуг
             var services = _context.Services.ToList();
