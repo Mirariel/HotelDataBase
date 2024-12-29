@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataBase.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DataBase.Controllers
 {
+    [Authorize]
     public class ReservationsController : Controller
     {
         private readonly HotelDataBaseContext _context;
@@ -142,7 +144,7 @@ namespace DataBase.Controllers
             }
 
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName", reservation.CustomerId);
-            ViewData["RoomId"] = new SelectList(_context.Rooms, "RoomId", "TypeAndNumber", reservation.RoomId);
+            ViewData["RoomId"] = new SelectList(_context.Rooms.Include(room => room.RoomType), "RoomId", "TypeAndNumber", reservation.RoomId);
             return View(reservation);
         }
 
@@ -222,7 +224,7 @@ namespace DataBase.Controllers
             }
 
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName", reservation.CustomerId);
-            ViewData["RoomId"] = new SelectList(_context.Rooms, "RoomId", "TypeAndNumber", reservation.RoomId);
+            ViewData["RoomId"] = new SelectList(_context.Rooms.Include(room => room.RoomType), "RoomId", "TypeAndNumber", reservation.RoomId);
             return View(reservation);
         }
 

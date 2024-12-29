@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataBase.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DataBase.Controllers
 {
+    [Authorize]
     public class RoomsController : Controller
     {
         private readonly HotelDataBaseContext _context;

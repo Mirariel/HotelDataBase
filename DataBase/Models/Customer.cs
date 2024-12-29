@@ -24,8 +24,6 @@ public partial class Customer
 
     public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 
-    public virtual ICollection<ServiceUsage> ServiceUsages { get; set; } = new List<ServiceUsage>();
-
     [NotMapped]
     public string FullName => $"{FirstName} {LastName}";
 }

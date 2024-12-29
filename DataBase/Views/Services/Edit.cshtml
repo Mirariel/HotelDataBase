@@ -4,41 +4,40 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Edit Service</h1>
 
-<h4>Service</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ServicesId" />
+
             <div class="form-group">
-                <label asp-for="ServicesName" class="control-label"></label>
+                <label asp-for="ServicesName"></label>
                 <input asp-for="ServicesName" class="form-control" />
-                <span asp-validation-for="ServicesName" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
+                <label asp-for="Price"></label>
                 <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label asp-for="ServiceImg">Image URL</label>
+                <input asp-for="ServiceImg" class="form-control" />
+                @if (!string.IsNullOrEmpty(Model.ServiceImg))
+                {
+                    <img src="@Model.ServiceImg" alt="Service Image" class="img-thumbnail mt-2" style="max-width: 200px;" />
+                }
             </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Save</button>
+            <a asp-action="Index" class="btn btn-secondary mt-3">Back to List</a>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

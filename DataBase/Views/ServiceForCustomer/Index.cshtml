@@ -1,0 +1,27 @@
+﻿@model IEnumerable<DataBase.Models.Service>
+
+<h1>Доступні послуги</h1>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <p>@ViewBag.ErrorMessage</p>
+}
+else
+{
+    <div class="services-list">
+        @foreach (var service in Model)
+        {
+            <div class="service-card">
+                <img src="@service.ServiceImg" alt="@service.ServicesName" />
+                <h2>@service.ServicesName</h2>
+                <p>@service.Description</p>
+                <p>Ціна: @service.Price грн</p>
+                <form asp-action="UseService" method="post">
+                    <input type="hidden" name="serviceId" value="@service.ServicesId" />
+                    <input type="hidden" name="customerId" value="1" /> <!-- Заміни на динамічний customerId -->
+                    <button type="submit">Скористатися послугою</button>
+                </form>
+            </div>
+        }
+    </div>
+}

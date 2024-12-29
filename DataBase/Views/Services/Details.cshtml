@@ -4,33 +4,31 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Service Details</h1>
 
 <div>
-    <h4>Service</h4>
+    <h4>@Model.ServicesName</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ServicesName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ServicesName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+        <dt class="col-sm-2">Name</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.ServicesName)</dd>
+
+        <dt class="col-sm-2">Price</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Price)</dd>
+
+        <dt class="col-sm-2">Description</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Description)</dd>
+
+        <dt class="col-sm-2">Image</dt>
+        <dd class="col-sm-10">
+            @if (!string.IsNullOrEmpty(Model.ServiceImg))
+            {
+                <img src="@Model.ServiceImg" alt="Service Image" class="img-thumbnail" style="max-width: 200px;" />
+            }
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.ServicesId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.ServicesId" class="btn btn-warning">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

@@ -126,18 +126,21 @@ public partial class HotelDataBaseContext : DbContext
 
             entity.Property(e => e.UsageId).HasColumnName("UsageID");
 
-            entity.HasOne(d => d.Customer)
+            // Зв'язок із Reservation
+            entity.HasOne(d => d.Reservation)
                 .WithMany(p => p.ServiceUsages)
-                .HasForeignKey(d => d.CustomerId)
+                .HasForeignKey(d => d.ReservationId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK_ServiceUsage_Customer");
+                .HasConstraintName("FK_ServiceUsage_Reservation");
 
+            // Зв'язок із Services
             entity.HasOne(d => d.Services)
                 .WithMany(p => p.ServiceUsages)
                 .HasForeignKey(d => d.ServicesId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_ServiceUsage_Service");
 
+            // Зв'язок із Employee
             entity.HasOne(d => d.Employee)
                 .WithMany(p => p.ServiceUsages)
                 .HasForeignKey(d => d.EmployeeId)
@@ -145,8 +148,8 @@ public partial class HotelDataBaseContext : DbContext
                 .HasConstraintName("FK_ServiceUsage_Employee");
         });
 
+
         OnModelCreatingPartial(modelBuilder);
     }
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
-

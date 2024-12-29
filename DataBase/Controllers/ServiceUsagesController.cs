@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataBase.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DataBase.Controllers
 {
+    [Authorize]
     public class ServiceUsagesController : Controller
     {
         private readonly HotelDataBaseContext _context;
@@ -23,33 +25,42 @@ namespace DataBase.Controllers
         {
             ViewData["ServiceSortParam"] = String.IsNullOrEmpty(sortOrder) ? "service_desc" : "";
             ViewData["EmployeeSortParam"] = sortOrder == "employee_desc" ? "employee_asc" : "employee_desc";
+            ViewData["ExecutionDateSortParam"] = sortOrder == "date_desc" ? "date_asc" : "date_desc";
             ViewData["CurrentFilter"] = searchString;
 
             var serviceUsages = _context.ServiceUsage
-                .Include(s => s.Customer)
+                .Include(s => s.Reservation)
+                    .ThenInclude(r => r.Customer) // Завантаження клієнта
+                .Include(s => s.Reservation)  // Завантаження резервації
+                    .ThenInclude(r => r.Room)  // Завантаження кімнати
                 .Include(s => s.Services)
                 .Include(s => s.Employee)
                 .AsQueryable();
 
+
+            // Фільтрація за іменем або прізвищем клієнта
             if (!String.IsNullOrEmpty(searchString))
             {
                 serviceUsages = serviceUsages.Where(s =>
-                    s.Customer.FirstName.Contains(searchString) ||
-                    s.Customer.LastName.Contains(searchString)
+                    s.Reservation.Customer.FirstName.Contains(searchString) ||
+                    s.Reservation.Customer.LastName.Contains(searchString)
                 );
             }
 
+            // Сортування
             serviceUsages = sortOrder switch
             {
                 "service_desc" => serviceUsages.OrderByDescending(s => s.Services.ServicesName),
                 "employee_desc" => serviceUsages.OrderByDescending(s => s.Employee.LastName),
                 "employee_asc" => serviceUsages.OrderBy(s => s.Employee.LastName),
+                "date_desc" => serviceUsages.OrderByDescending(s => s.ExecutionDate),
+                "date_asc" => serviceUsages.OrderBy(s => s.ExecutionDate),
                 _ => serviceUsages.OrderBy(s => s.Services.ServicesName),
             };
 
+            // Повертаємо результат до View
             return View(await serviceUsages.ToListAsync());
         }
-
 
 
 
@@ -63,7 +74,7 @@ namespace DataBase.Controllers
             }
 
             var serviceUsage = await _context.ServiceUsage
-                .Include(s => s.Customer)
+                .Include(s => s.Reservation)
                 .Include(s => s.Employee)
                 .Include(s => s.Services)
                 .FirstOrDefaultAsync(m => m.UsageId == id);
@@ -78,7 +89,15 @@ namespace DataBase.Controllers
         // GET: ServiceUsages/Create
         public IActionResult Create()
         {
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName");
+            ViewData["ReservationId"] = new SelectList(
+     _context.Reservation
+         .Include(r => r.Customer)
+         .Include(r => r.Room)
+         .ToList(), // Завантажує дані
+     "ReservationId",
+     "DisplayText"
+ );
+
             ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "LastName");
             ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName");
             return View();
@@ -89,7 +108,7 @@ namespace DataBase.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UsageId,CustomerId,ServicesId,EmployeeId")] ServiceUsage serviceUsage)
+        public async Task<IActionResult> Create( ServiceUsage serviceUsage)
         {
             if (ModelState.IsValid)
             {
@@ -97,7 +116,15 @@ namespace DataBase.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName", serviceUsage.CustomerId);
+            ViewData["ReservationId"] = new SelectList(
+     _context.Reservation
+         .Include(r => r.Customer)
+         .Include(r => r.Room)
+         .ToList(), // Завантажує дані
+     "ReservationId",
+     "DisplayText",
+     serviceUsage.ReservationId
+ );
             ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "LastName", serviceUsage.EmployeeId);
             ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName", serviceUsage.ServicesId);
             return View(serviceUsage);
@@ -116,7 +143,15 @@ namespace DataBase.Controllers
             {
                 return NotFound();
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName", serviceUsage.CustomerId);
+            ViewData["ReservationId"] = new SelectList(
+     _context.Reservation
+         .Include(r => r.Customer)
+         .Include(r => r.Room)
+         .ToList(), // Завантажує дані
+     "ReservationId",
+     "DisplayText",
+     serviceUsage.ReservationId
+ );
             ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "LastName", serviceUsage.EmployeeId);
             ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName", serviceUsage.ServicesId);
             return View(serviceUsage);
@@ -127,7 +162,7 @@ namespace DataBase.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UsageId,CustomerId,ServicesId,EmployeeId")] ServiceUsage serviceUsage)
+        public async Task<IActionResult> Edit(int id, ServiceUsage serviceUsage)
         {
             if (id != serviceUsage.UsageId)
             {
@@ -154,7 +189,15 @@ namespace DataBase.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName", serviceUsage.CustomerId);
+            ViewData["ReservationId"] = new SelectList(
+    _context.Reservation
+        .Include(r => r.Customer)
+        .Include(r => r.Room)
+        .ToList(),
+    "ReservationId",
+    "DisplayText",
+    serviceUsage.ReservationId
+);
             ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "LastName", serviceUsage.EmployeeId);
             ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName", serviceUsage.ServicesId);
             return View(serviceUsage);
@@ -169,7 +212,7 @@ namespace DataBase.Controllers
             }
 
             var serviceUsage = await _context.ServiceUsage
-                .Include(s => s.Customer)
+                .Include(s => s.Reservation)
                 .Include(s => s.Employee)
                 .Include(s => s.Services)
                 .FirstOrDefaultAsync(m => m.UsageId == id);

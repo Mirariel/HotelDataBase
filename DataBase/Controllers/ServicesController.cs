@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataBase.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DataBase.Controllers
 {
+    [Authorize]
     public class ServicesController : Controller
     {
         private readonly HotelDataBaseContext _context;
@@ -53,7 +55,7 @@ namespace DataBase.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ServicesId,ServicesName,Price,Description")] Service service)
+        public async Task<IActionResult> Create(Service service)
         {
             if (ModelState.IsValid)
             {
@@ -85,7 +87,7 @@ namespace DataBase.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ServicesId,ServicesName,Price,Description")] Service service)
+        public async Task<IActionResult> Edit(int id, Service service)
         {
             if (id != service.ServicesId)
             {

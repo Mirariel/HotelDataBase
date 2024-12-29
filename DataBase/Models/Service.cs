@@ -12,6 +12,7 @@ public partial class Service
     public decimal Price { get; set; }
 
     public string Description { get; set; } = null!;
+    public string ServiceImg {  get; set; }
 
     public virtual ICollection<ServiceUsage> ServiceUsages { get; set; } = new List<ServiceUsage>();
 }

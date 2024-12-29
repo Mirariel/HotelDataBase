@@ -1,0 +1,25 @@
+﻿@model DataBase.Models.RoomType
+
+@{
+    ViewData["Title"] = Model.TypeName;
+}
+
+<main>
+    <section class="room">
+        <div class="container">
+            <h2>@Model.TypeName</h2>
+            <img class="Roomsimag" src="@(Model.ImageUrl ?? "~/images/default-room.png")" alt="@Model.TypeName">
+            <p class="description">@Model.Description</p>
+            <p class="price">Ціна: @Model.Price грн</p>
+            <p class="capacity">Місткість: @Model.Capacity</p>
+        </div>
+    </section>
+
+    <section class="booking">
+        <div class="container reservationbtn">
+            <a class="reservationref" href="@Url.Action("SelectDate", "HotelRoom", new { roomType = Model.TypeId })">Забронювати</a>
+        </div>
+    </section>
+</main>
+
+<script src="~/js/reservationwindowscript.js"></script>
