@@ -102,6 +102,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG90ZWxSb29tXFNlbGVjdFJvb20uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/koshk/source/repos/HotelDataBase/DataBase/Views/ReservationCustomer/ReservationDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpb25DdXN0b21lclxSZXNlcnZhdGlvbkRldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/koshk/source/repos/HotelDataBase/DataBase/Views/ReservationCustomer/ReservationList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpb25DdXN0b21lclxSZXNlcnZhdGlvbkxpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/koshk/source/repos/HotelDataBase/DataBase/Views/ReservationCustomer/Search.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpb25DdXN0b21lclxTZWFyY2guY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/koshk/source/repos/HotelDataBase/DataBase/Views/Reservations/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpb25zXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -166,8 +178,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZUZvckN1c3RvbWVyXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/koshk/source/repos/HotelDataBase/DataBase/Views/ServiceForCustomer/NoBooking.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZUZvckN1c3RvbWVyXE5vQm9va2luZy5jc2h0bWw=
+[C:/Users/koshk/source/repos/HotelDataBase/DataBase/Views/ServiceForCustomer/ServiceAccess.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZUZvckN1c3RvbWVyXFNlcnZpY2VBY2Nlc3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/koshk/source/repos/HotelDataBase/DataBase/Views/ServiceForCustomer/ServiceOrder.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZUZvckN1c3RvbWVyXFNlcnZpY2VPcmRlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/koshk/source/repos/HotelDataBase/DataBase/Views/Services/Create.cshtml]
@@ -216,6 +232,22 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/koshk/source/repos/HotelDataBase/DataBase/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/koshk/source/repos/HotelDataBase/DataBase/Views/Statistics/IncomeByPeriod.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhdGlzdGljc1xJbmNvbWVCeVBlcmlvZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/koshk/source/repos/HotelDataBase/DataBase/Views/Statistics/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhdGlzdGljc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/koshk/source/repos/HotelDataBase/DataBase/Views/Statistics/TopEmployees.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhdGlzdGljc1xUb3BFbXBsb3llZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/koshk/source/repos/HotelDataBase/DataBase/Views/Statistics/TopServices.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhdGlzdGljc1xUb3BTZXJ2aWNlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/koshk/source/repos/HotelDataBase/DataBase/Views/_ViewImports.cshtml]

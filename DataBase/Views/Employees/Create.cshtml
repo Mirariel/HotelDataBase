@@ -4,36 +4,36 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Створити</h1>
 
-<h4>Employee</h4>
+<h4>Робітник</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
+                <label asp-for="FirstName" class="control-label">Ім'я</label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
+                <label asp-for="LastName" class="control-label">Прізвище</label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Position" class="control-label"></label>
+                <label asp-for="Position" class="control-label">Посада</label>
                 <input asp-for="Position" class="form-control" />
                 <span asp-validation-for="Position" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Birthday" class="control-label"></label>
+                <label asp-for="Birthday" class="control-label">Дата народження</label>
                 <input asp-for="Birthday" class="form-control" />
                 <span asp-validation-for="Birthday" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Phone" class="control-label"></label>
+                <label asp-for="Phone" class="control-label">Номер телефону</label>
                 <input asp-for="Phone" class="form-control" />
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
@@ -43,27 +43,27 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
+                <label asp-for="Password" class="control-label">Пароль</label>
                 <input type="password" asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="HireDate" class="control-label"></label>
+                <label asp-for="HireDate" class="control-label">Дата працевлаштування</label>
                 <input asp-for="HireDate" class="form-control" />
                 <span asp-validation-for="HireDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ResidencePlace" class="control-label"></label>
+                <label asp-for="ResidencePlace" class="control-label">Адреса проживання</label>
                 <input asp-for="ResidencePlace" class="form-control" />
                 <span asp-validation-for="ResidencePlace" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Education" class="control-label"></label>
+                <label asp-for="Education" class="control-label">Освіта</label>
                 <input asp-for="Education" class="form-control" />
                 <span asp-validation-for="Education" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Salary" class="control-label"></label>
+                <label asp-for="Salary" class="control-label">Заробітня плата</label>
                 <input asp-for="Salary" class="form-control" />
                 <span asp-validation-for="Salary" class="text-danger"></span>
             </div>

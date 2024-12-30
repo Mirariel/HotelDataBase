@@ -4,9 +4,9 @@
     ViewData["Title"] = "Edit Room";
 }
 
-<h1>Edit Room</h1>
+<h1>Редагування</h1>
 
-<h4>Room</h4>
+<h4>Кімната</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,16 +14,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="RoomId" />
 
-            <!-- Room Number -->
             <div class="form-group">
-                <label asp-for="RoomNumber" class="control-label"></label>
+                <label asp-for="RoomNumber" class="control-label">Номер кімнати</label>
                 <input asp-for="RoomNumber" class="form-control" />
                 <span asp-validation-for="RoomNumber" class="text-danger"></span>
             </div>
 
-            <!-- Room Type -->
             <div class="form-group">
-                <label asp-for="RoomTypeId" class="control-label"></label>
+                <label asp-for="RoomTypeId" class="control-label">Тип кімнати</label>
                 <select asp-for="RoomTypeId" class="form-control" asp-items="ViewBag.RoomTypeId"></select>
                 <span asp-validation-for="RoomTypeId" class="text-danger"></span>
             </div>

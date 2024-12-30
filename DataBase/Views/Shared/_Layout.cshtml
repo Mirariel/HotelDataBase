@@ -13,7 +13,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <!-- Логотип -->
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DataBase</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HotelDataBase</a>
 
                 <!-- Кнопка меню для мобільних -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -27,6 +27,9 @@
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ServiceForCustomer" asp-action="Index">Послуги для відвідувачів</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="ReservationCustomer" asp-action="Search">Ваші резервації</a>
                         </li>
                     </ul>
                     <!-- Ліве меню -->
@@ -46,13 +49,16 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Rooms" asp-action="Index">Кімнати</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="ServiceUsages" asp-action="Index">Замовлені сервіси</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ServiceUsages" asp-action="Index">Замовлені послуги</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="RoomTypes" asp-action="Index">Типи кімнат</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Services" asp-action="Index">Послуги</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Statistics" asp-action="Index">Статистика</a>
                             </li>
                         </ul>
                     }
@@ -63,7 +69,7 @@
                         {
                             var userName = Context.User.Identity?.Name;
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Profile">@userName</a>
+                                <span class="nav-link text-dark">@userName</span>
                             </li>
                             <li class="nav-item">
                                 <a class="btn btn-outline-primary nav-link px-3" asp-area="" asp-controller="Account" asp-action="Logout">Вийти</a>

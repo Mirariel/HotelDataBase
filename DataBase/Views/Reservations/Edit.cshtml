@@ -4,9 +4,9 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Редагування</h1>
 
-<h4>Reservation</h4>
+<h4>Бронювання</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,22 +14,22 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ReservationId" />
             <div class="form-group">
-                <label asp-for="CustomerId" class="control-label"></label>
+                <label asp-for="CustomerId" class="control-label">Клієнт</label>
                 <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.CustomerId"></select>
                 <span asp-validation-for="CustomerId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RoomId" class="control-label"></label>
+                <label asp-for="RoomId" class="control-label">Кімната</label>
                 <select asp-for="RoomId" class="form-control" asp-items="ViewBag.RoomId"></select>
                 <span asp-validation-for="RoomId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CheckInDate" class="control-label"></label>
+                <label asp-for="CheckInDate" class="control-label">Заселення</label>
                 <input asp-for="CheckInDate" class="form-control" />
                 <span asp-validation-for="CheckInDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CheckOutDate" class="control-label"></label>
+                <label asp-for="CheckOutDate" class="control-label">Виселення</label>
                 <input asp-for="CheckOutDate" class="form-control" />
                 <span asp-validation-for="CheckOutDate" class="text-danger"></span>
             </div>

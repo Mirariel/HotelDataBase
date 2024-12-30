@@ -1,0 +1,31 @@
+﻿@model dynamic
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header bg-success text-white text-center">
+            <h2>Замовлення успішно оформлено!</h2>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Деталі замовлення</h5>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <strong>Послуга:</strong> @Model.ServiceName
+                </li>
+                <li class="list-group-item">
+                    <strong>Номер кімнати:</strong> @Model.RoomNumber
+                </li>
+                <li class="list-group-item">
+                    <strong>Дата виконання:</strong> @Model.ExecutionDate.ToString("dd.MM.yyyy HH:mm")
+                </li>
+                <li class="list-group-item">
+                    <strong>Ціна:</strong> @Model.Price грн
+                </li>
+            </ul>
+        </div>
+        <div class="card-footer text-center">
+            <a href="@Url.Action("Index", "ServiceForCustomer")" class="btn btn-primary">На головну</a>
+        </div>
+    </div>
+</div>

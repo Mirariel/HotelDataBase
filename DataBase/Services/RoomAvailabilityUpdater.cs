@@ -21,7 +21,6 @@ namespace DataBase.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            // Запускаємо таймер одразу після старту сервісу
             _timer = new Timer(async _ => await UpdateRoomAvailability(), null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
             return Task.CompletedTask;
         }
@@ -35,7 +34,6 @@ namespace DataBase.Services
 
                 try
                 { 
-                    // Завантаження даних
                     var reservations = await context.Reservation.ToListAsync();
                     var rooms = await context.Rooms.ToListAsync();
 
@@ -56,21 +54,18 @@ namespace DataBase.Services
                 }
                 catch (Exception ex)
                 {
-                    // Логування помилок
                     Console.WriteLine($"Помилка оновлення доступності кімнат: {ex.Message}");
                 }
             }
         }
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            // Зупиняємо таймер, якщо сервіс завершує роботу
             _timer?.Change(Timeout.Infinite, 0);
             return Task.CompletedTask;
         }
 
         public void Dispose()
         {
-            // Звільняємо ресурси таймера
             _timer?.Dispose();
         }
     }

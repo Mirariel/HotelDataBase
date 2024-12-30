@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Бронювання</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -24,19 +24,19 @@
     <thead>
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["CheckInDateSortParm"]">Check In Date</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CheckInDateSortParm"]">Заселення</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CheckOutDate)
+                Виселення 
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["TotalPriceSortParm"]">Total Price</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["TotalPriceSortParm"]">Сума за проживання</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Customer)
+                Клієнт
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Room)
+                Кімната
             </th>
             <th></th>
         </tr>

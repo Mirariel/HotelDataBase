@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DataBase.Models;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataBase.Controllers
 {
@@ -15,38 +16,115 @@ namespace DataBase.Controllers
 
         public IActionResult Index()
         {
-            //var today = DateTime.Today;
-
-            //var hasBookingToday = _context.Reservation
-            //    .Any(b => b.CustomerId == customerId && b.CheckInDate <= today && b.CheckOutDate>=today);
-
-            //if (!hasBookingToday)
-            //{
-            //    ViewBag.ErrorMessage = "У вас немає бронювань на сьогодні.";
-            //    return View("NoBooking");
-            //}
-
-            // Отримуємо список доступних послуг
             var services = _context.Services.ToList();
-
             return View(services);
         }
 
         [HttpPost]
-        public IActionResult UseService(int serviceId, int reservationId)
+        public IActionResult CheckReservation(string passportNumber, int serviceId)
         {
-            var usage = new ServiceUsage
+            var today = DateTime.Now;
+
+            var customer = _context.Customers.FirstOrDefault(c => c.PassportNumber == passportNumber);
+            if (customer == null)
             {
-                ServicesId = serviceId,
-                ReservationId = reservationId,
-                ExecutionDate = DateTime.Now
+                TempData["ErrorMessage"] = $"Клієнта з номером паспорта {passportNumber} не знайдено.";
+                return RedirectToAction("Index");
+            }
+
+            var reservations = _context.Reservation
+                .Where(r => r.CustomerId == customer.CustomerId && r.CheckOutDate >= today)
+                .ToList();
+
+            if (!reservations.Any())
+            {
+                TempData["ErrorMessage"] = $"У клієнта з номером паспорта {passportNumber} немає активних бронювань.";
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("ServiceOrder", new { customerId = customer.CustomerId, serviceId = serviceId, reservationId = reservations.First().ReservationId });
+        }
+
+        public IActionResult ServiceOrder(int customerId, int serviceId)
+        {
+            var service = _context.Services.FirstOrDefault(s => s.ServicesId == serviceId);
+            if (service == null)
+            {
+                TempData["ErrorMessage"] = "Послугу не знайдено.";
+                return RedirectToAction("Index");
+            }
+
+            var reservations = _context.Reservation
+                .Where(r => r.CustomerId == customerId && r.CheckOutDate >= DateTime.Today)
+                .Include(r => r.Room)
+                .ToList();
+
+            if (!reservations.Any())
+            {
+                TempData["ErrorMessage"] = "У клієнта немає активних бронювань.";
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Reservations = reservations;
+            ViewBag.CustomerId = customerId;   
+            ViewBag.ServiceId = serviceId;     
+
+            return View(service);
+        }
+
+
+        [HttpPost]
+        public IActionResult ConfirmServiceOrder(int serviceId, int customerId, int reservationId, DateTime selectedDate, string selectedTime)
+        {
+            var Date = DateTime.Parse($"{selectedDate.ToShortDateString()} {selectedTime}");
+            try
+            {
+                var reservation = _context.Reservation.FirstOrDefault(r => r.ReservationId == reservationId);
+                if (reservation == null)
+                {
+                    TempData["ErrorMessage"] = "Не вдалося знайти актуального бронювання.";
+                    return RedirectToAction("ServiceOrder", new {customerId, serviceId});
+                }
+                var usage = new ServiceUsage
+                {
+                    ServicesId = serviceId,
+                    ReservationId = reservation.ReservationId,
+                    ExecutionDate = Date
+                };
+
+                _context.ServiceUsage.Add(usage);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.ToString();
+                return RedirectToAction("ServiceOrder", new { customerId, serviceId });
+            }
+            return RedirectToAction("ServiceAccess", new { serviceId = serviceId, reservationId = reservationId, executionDate = Date });
+        }
+        public IActionResult ServiceAccess(int serviceId, int reservationId, DateTime executionDate)
+        {
+            var service = _context.Services.FirstOrDefault(s => s.ServicesId == serviceId);
+            var reservation = _context.Reservation
+                .Include(r => r.Room)
+                .Include(c => c.Customer)
+                .FirstOrDefault(r => r.ReservationId == reservationId);
+
+            if (service == null || reservation == null)
+            {
+                TempData["ErrorMessage"] = "Не вдалося знайти інформацію про замовлення.";
+                return RedirectToAction("Index");
+            }
+
+            var model = new
+            {
+                ServiceName = service.ServicesName,
+                RoomNumber = reservation.Room?.RoomNumber,
+                ExecutionDate = executionDate,
+                Price = service.Price
             };
 
-            _context.ServiceUsage.Add(usage);
-            _context.SaveChanges();
-
-            return RedirectToAction("Index");
+            return View(model);
         }
     }
 }
-

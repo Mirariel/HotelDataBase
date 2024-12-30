@@ -1,0 +1,32 @@
+﻿@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Деталі резервації";
+}
+
+<div class="container mt-5">
+    <h2>Деталі резервації</h2>
+    <h4>Кімната: @ViewBag.Reservation.Room?.RoomNumber @ViewBag.Reservation.Room.RoomType.TypeName</h4>
+    <h4>Дати: @ViewBag.Reservation.CheckInDate.ToShortDateString() - @ViewBag.Reservation.CheckOutDate.ToShortDateString()</h4>
+
+    <table class="table table-bordered mt-4">
+        <thead class="thead-light">
+            <tr>
+                <th>Назва послуги</th>
+                <th>Дата виконання</th>
+                <th>Ціна</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var service in Model)
+            {
+                <tr>
+                    <td>@service.ServicesName</td>
+                    <td>@service.ExecutionDate.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@service.Price грн</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a asp-action="Search" class="btn btn-secondary mt-4">Назад до пошуку</a>
+</div>

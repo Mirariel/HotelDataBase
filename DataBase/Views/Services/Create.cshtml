@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create Service</h1>
+<h1>Створити послугу</h1>
 
 <hr />
 <div class="row">
@@ -13,25 +13,25 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="ServicesName" class="control-label"></label>
+                <label asp-for="ServicesName" class="control-label">Назва сервісу</label>
                 <input asp-for="ServicesName" class="form-control" />
                 <span asp-validation-for="ServicesName" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
+                <label asp-for="Price" class="control-label">Ціна</label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
+                <label asp-for="Description" class="control-label">Опис</label>
                 <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="ServiceImg" class="control-label">Image URL</label>
+                <label asp-for="ServiceImg" class="control-label">Картинка</label>
                 <input asp-for="ServiceImg" class="form-control" />
                 <span asp-validation-for="ServiceImg" class="text-danger"></span>
             </div>

@@ -41,6 +41,8 @@ public partial class HotelDataBaseContext : DbContext
             entity.Property(e => e.Email).HasMaxLength(50).IsRequired();
             entity.Property(e => e.PassportNumber).HasMaxLength(20).IsUnicode(false).IsRequired();
             entity.Property(e => e.Address).HasMaxLength(50).IsRequired();
+
+            entity.ToTable(tb => tb.HasTrigger("trg_CheckAge"));
         });
 
         modelBuilder.Entity<Employee>(entity =>
@@ -59,6 +61,8 @@ public partial class HotelDataBaseContext : DbContext
             entity.Property(e => e.Education).HasMaxLength(50).IsRequired();
             entity.Property(e => e.Salary).HasColumnType("decimal(10, 2)").IsRequired();
             entity.Property(e => e.PasswordHash).HasMaxLength(64).IsRequired();
+
+            entity.ToTable(tb => tb.HasTrigger("trg_CheckEmployeeAge"));
         });
 
         modelBuilder.Entity<RoomType>(entity =>
@@ -108,6 +112,8 @@ public partial class HotelDataBaseContext : DbContext
                 .HasForeignKey(d => d.RoomId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Reservation_Room");
+
+            entity.ToTable(tb => tb.HasTrigger("trg_CheckRoomAvailability"));
         });
 
         modelBuilder.Entity<Service>(entity =>
@@ -126,26 +132,25 @@ public partial class HotelDataBaseContext : DbContext
 
             entity.Property(e => e.UsageId).HasColumnName("UsageID");
 
-            // Зв'язок із Reservation
             entity.HasOne(d => d.Reservation)
                 .WithMany(p => p.ServiceUsages)
                 .HasForeignKey(d => d.ReservationId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_ServiceUsage_Reservation");
 
-            // Зв'язок із Services
             entity.HasOne(d => d.Services)
                 .WithMany(p => p.ServiceUsages)
                 .HasForeignKey(d => d.ServicesId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_ServiceUsage_Service");
 
-            // Зв'язок із Employee
             entity.HasOne(d => d.Employee)
                 .WithMany(p => p.ServiceUsages)
                 .HasForeignKey(d => d.EmployeeId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_ServiceUsage_Employee");
+
+            entity.ToTable(tb => tb.HasTrigger("trg_CheckExecutionDate"));
         });
 
 

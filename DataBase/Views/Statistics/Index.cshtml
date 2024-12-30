@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Статистика";
+}
+
+<h2>Статистика</h2>
+
+<div>
+    <h3>Заробіток за період</h3>
+    @using (Html.BeginForm("IncomeByPeriod", "Statistics", FormMethod.Post))
+    {
+        <label for="startDate">Дата початку:</label>
+        <input type="date" name="startDate" required />
+        <label for="endDate">Дата кінця:</label>
+        <input type="date" name="endDate" required />
+        <button type="submit">Переглянути</button>
+    }
+</div>
+
+<div>
+    <h3>Топ 3 послуги</h3>
+    <form action="@Url.Action("TopServices", "Statistics")" method="get">
+        <button type="submit">Переглянути</button>
+    </form>
+</div>
+
+<div>
+    <h3>Топ 3 працівники</h3>
+    <form action="@Url.Action("TopEmployees", "Statistics")" method="get">
+        <button type="submit">Переглянути</button>
+    </form>
+</div>

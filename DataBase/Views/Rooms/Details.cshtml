@@ -4,64 +4,58 @@
     ViewData["Title"] = "Room Details";
 }
 
-<h1>Room Details</h1>
+<h1>Деталі</h1>
 
 <div>
-    <h4>Room</h4>
+    <h4>Кімната</h4>
     <hr />
     <dl class="row">
-        <!-- Room Number -->
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RoomNumber)
+            Номер кімнати:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RoomNumber)
         </dd>
 
-        <!-- Room Type -->
         <dt class="col-sm-2">
-            Room Type
+            Тип кімнати:
         </dt>
         <dd class="col-sm-10">
             @Model.RoomType.TypeName
         </dd>
 
-        <!-- Capacity -->
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RoomType.Capacity)
+            Місткість:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RoomType.Capacity)
         </dd>
 
-        <!-- Price -->
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RoomType.Price)
+            Ціна за ніч:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RoomType.Price)
         </dd>
 
-        <!-- Description -->
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RoomType.Description)
+            Опис
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RoomType.Description)
         </dd>
 
-        <!-- Availability -->
         <dt class="col-sm-2">
-            Status
+            Доступність
         </dt>
         <dd class="col-sm-10">
             @if (Model.IsAvailable)
             {
-                <span class="text-success">Available</span>
+                <span class="text-success">Вільна</span>
             }
             else
             {
-                <span class="text-danger">Occupied</span>
+                <span class="text-danger">Зайнята</span>
             }
         </dd>
     </dl>

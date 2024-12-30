@@ -38,4 +38,6 @@ public partial class Employee
 
     [NotMapped]
     public string FullName => $"{FirstName} {LastName}";
+    [NotMapped]
+    public string NameWithPosition => $"{FullName} ({Position})";
 }

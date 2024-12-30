@@ -1,0 +1,41 @@
+﻿@model DataBase.Models.Service
+
+<h1 class="service-order-title">Замовлення послуги: @Model.ServicesName</h1>
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+<p class="service-order-description">@Model.Description</p>
+<p class="service-order-price">Ціна: @Model.Price грн</p>
+
+<form asp-action="ConfirmServiceOrder" method="post">
+    <input type="hidden" name="serviceId" value="@ViewBag.ServiceId" />
+    <input type="hidden" name="customerId" value="@ViewBag.CustomerId" />
+
+    <div class="form-group">
+        <label for="reservationId">Оберіть активне бронювання:</label>
+        <select id="reservationId" name="reservationId" class="form-control" required>
+            @foreach (var reservation in (IEnumerable<DataBase.Models.Reservation>)ViewBag.Reservations)
+            {
+                <option value="@reservation.ReservationId">
+                    Номер кімнати: @reservation.Room?.RoomNumber,
+                    Дата: @reservation.CheckInDate.ToShortDateString() - @reservation.CheckOutDate.ToShortDateString()
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="selectedDate">Оберіть дату:</label>
+        <input type="date" id="selectedDate" name="selectedDate" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="selectedTime">Оберіть час:</label>
+        <input type="time" id="selectedTime" name="selectedTime" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-success">Підтвердити замовлення</button>
+</form>
+

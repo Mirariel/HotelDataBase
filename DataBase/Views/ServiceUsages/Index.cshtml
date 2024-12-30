@@ -4,34 +4,32 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Service Usages</h1>
+<h1>Замовлені послуги</h1>
 
-<a asp-action="Create" class="btn btn-success mb-3">Add New</a>
+<a asp-action="Create" class="btn btn-success mb-3">Додати нову</a>
 
-<!-- Форма для пошуку -->
 <form asp-action="Index" method="get">
     <div class="form-group">
-        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Search by Customer FirstName or LastName" />
+        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Пошук за іменем або прізвищем клієнта" />
     </div>
-    <button type="submit" class="btn btn-primary">Search</button>
-    <a asp-action="Index" class="btn btn-secondary">Reset</a>
+    <button type="submit" class="btn btn-primary">Шукати</button>
+    <a asp-action="Index" class="btn btn-secondary">Скинути</a>
 </form>
 
-<!-- Таблиця з можливістю сортування -->
 <table class="table">
     <thead>
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["ServiceSortParam"]">Service</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["ServiceSortParam"]">Послуга</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmployeeSortParam"]">Employee</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmployeeSortParam"]">Працівник</a>
             </th>
             <th>
-                Customer Details
+                Клієнт
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["ExecutionDateSortParam"]">Execution Date</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["ExecutionDateSortParam"]">Дата виконання</a>
             </th>
             <th></th>
         </tr>
@@ -41,7 +39,7 @@
         {
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.Services.ServicesName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Employee.LastName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Employee.NameWithPosition)</td>
                     <td>@Html.DisplayFor(modelItem => item.Reservation.DisplayText)</td>
                     <td>@item.ExecutionDate.ToString("yyyy-MM-dd HH:mm")</td>
                     <td>

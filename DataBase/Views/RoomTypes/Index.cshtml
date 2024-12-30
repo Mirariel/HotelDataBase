@@ -4,28 +4,28 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Типи кімнат</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Створити новий</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TypeName)
+                Назва типу
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+               Ціна
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+               Опис
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Capacity)
+                Місткість
             </th>
             <th>
-                Image
+                Картинка
             </th>
             <th></th>
         </tr>

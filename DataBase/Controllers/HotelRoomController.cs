@@ -70,7 +70,7 @@ namespace DataBase.Controllers
         {
             if (string.IsNullOrWhiteSpace(roomType))
             {
-                return RedirectToAction("SelectRoom");
+                return RedirectToAction("Index");
             }
 
             ViewBag.RoomType = roomType;
@@ -80,17 +80,15 @@ namespace DataBase.Controllers
         [HttpGet]
         public IActionResult SelectRoom(int roomType, DateTime checkInDate, DateTime checkOutDate)
         {
-            // Перевірка на коректність введених даних
             if (checkInDate == default || checkOutDate == default || checkInDate >= checkOutDate)
             {
                 ViewBag.RoomType = roomType;
                 ViewBag.CheckInDate = checkInDate == default ? "" : checkInDate.ToString("yyyy-MM-dd");
                 ViewBag.CheckOutDate = checkOutDate == default ? "" : checkOutDate.ToString("yyyy-MM-dd");
                 TempData["Error"] = "Будь ласка, введіть правильні дати.";
-                return View("SelectDate"); // Повернення до форми вибору дат
+                return View("SelectDate");
             }
 
-            // Пошук доступних кімнат
             var availableRooms = _context.Rooms
                 .Include(r => r.RoomType)
                 .Where(r => r.RoomType.TypeId == roomType &&
@@ -100,17 +98,15 @@ namespace DataBase.Controllers
                                  (checkOutDate > res.CheckInDate && checkOutDate <= res.CheckOutDate))))
                 .ToList();
 
-            // Якщо кімнат немає, залишаємо на тій же сторінці з повідомленням
             if (!availableRooms.Any())
             {
                 ViewBag.RoomType = roomType;
                 ViewBag.CheckInDate = checkInDate.ToString("yyyy-MM-dd");
                 ViewBag.CheckOutDate = checkOutDate.ToString("yyyy-MM-dd");
                 TempData["Error"] = "На жаль, немає доступних кімнат для обраного типу. Спробуйте вибрати інші дати.";
-                return View("SelectDate"); // Повернення до форми вибору дат з повідомленням
+                return View("SelectDate");
             }
 
-            // Передача даних до View для відображення доступних кімнат
             ViewBag.CheckInDate = checkInDate.ToString("yyyy-MM-dd");
             ViewBag.CheckOutDate = checkOutDate.ToString("yyyy-MM-dd");
             return View(availableRooms);
@@ -121,7 +117,7 @@ namespace DataBase.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateReservation(int roomId, Customer customer, DateTime checkInDate, DateTime checkOutDate)
+        public async Task<IActionResult> CreateReservation(int roomId, Customer customer, DateTime checkInDate, DateTime checkOutDate)
         {
             if (roomId == 0 || string.IsNullOrWhiteSpace(customer.PassportNumber))
             {
@@ -129,12 +125,10 @@ namespace DataBase.Controllers
                 return RedirectToAction("SelectRoomType");
             }
 
-            // Спроба знайти користувача
             var existingCustomer = _context.Customers.FirstOrDefault(c => c.PassportNumber == customer.PassportNumber);
 
             if (existingCustomer == null)
             {
-                // Перевіряємо заповненість обов'язкових полів
                 if (string.IsNullOrWhiteSpace(customer.FirstName) || string.IsNullOrWhiteSpace(customer.LastName))
                 {
                     TempData["Error"] = "Для створення нового користувача потрібно заповнити всі поля.";
@@ -142,22 +136,21 @@ namespace DataBase.Controllers
                 }
 
                 _context.Customers.Add(customer);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 existingCustomer = customer;
             }
 
-            // Створення бронювання
             var reservation = new Reservation
             {
                 CustomerId = existingCustomer.CustomerId,
                 RoomId = roomId,
                 CheckInDate = checkInDate,
                 CheckOutDate = checkOutDate,
-                TotalPrice = _context.Rooms.Include(r=>r.RoomType).FirstOrDefault(r => r.RoomId == roomId).RoomType.Price * (decimal)(checkOutDate - checkInDate).TotalDays
+                TotalPrice = _context.Rooms.Include(r => r.RoomType).FirstOrDefault(r => r.RoomId == roomId).RoomType.Price * (decimal)(checkOutDate - checkInDate).TotalDays
             };
 
             _context.Reservation.Add(reservation);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("Confirmation", new { reservationId = reservation.ReservationId });
         }
@@ -167,6 +160,8 @@ namespace DataBase.Controllers
         {
             var reservation = _context.Reservation
                 .Where(r => r.ReservationId == reservationId)
+                .Include(r => r.Room)
+                .ThenInclude(rt => rt.RoomType)
                 .Select(r => new
                 {
                     r.ReservationId,

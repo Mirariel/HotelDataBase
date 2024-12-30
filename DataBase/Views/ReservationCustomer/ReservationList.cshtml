@@ -1,0 +1,56 @@
+﻿@model IEnumerable<DataBase.Models.Reservation>
+@{
+    ViewData["Title"] = "Список резервацій";
+    var today = DateTime.Today;
+}
+
+<div class="container mt-5">
+    <h2>Список резервацій для: @ViewBag.Customer.FullName</h2>
+
+    <table class="table table-bordered mt-4">
+        <thead class="thead-light">
+            <tr>
+                <th>Номер кімнати</th>
+                <th>Дата заїзду</th>
+                <th>Дата виїзду</th>
+                <th>Стан</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reservation in Model)
+            {
+                var rowClass = reservation.CheckInDate <= today && reservation.CheckOutDate >= today
+                ? "table-success" 
+                : reservation.CheckOutDate < today
+                ? "table-secondary"
+                : ""; 
+
+                <tr class="@rowClass">
+                    <td>@reservation.Room?.RoomNumber @reservation.Room.RoomType.TypeName</td>
+                    <td>@reservation.CheckInDate.ToShortDateString()</td>
+                    <td>@reservation.CheckOutDate.ToShortDateString()</td>
+                    <td>
+                        @if (reservation.CheckInDate <= today && reservation.CheckOutDate >= today)
+                        {
+                            <span>Активна</span>
+                        }
+                        else if (reservation.CheckOutDate < today)
+                        {
+                            <span>Минулі</span>
+                        }
+                        else
+                        {
+                            <span>Майбутня</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="ReservationDetails" asp-route-reservationId="@reservation.ReservationId" class="btn btn-info">
+                            Переглянути послуги
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

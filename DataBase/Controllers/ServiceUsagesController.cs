@@ -30,9 +30,9 @@ namespace DataBase.Controllers
 
             var serviceUsages = _context.ServiceUsage
                 .Include(s => s.Reservation)
-                    .ThenInclude(r => r.Customer) // Завантаження клієнта
-                .Include(s => s.Reservation)  // Завантаження резервації
-                    .ThenInclude(r => r.Room)  // Завантаження кімнати
+                    .ThenInclude(r => r.Customer)
+                .Include(s => s.Reservation)
+                    .ThenInclude(r => r.Room)
                 .Include(s => s.Services)
                 .Include(s => s.Employee)
                 .AsQueryable();
@@ -75,6 +75,9 @@ namespace DataBase.Controllers
 
             var serviceUsage = await _context.ServiceUsage
                 .Include(s => s.Reservation)
+                .ThenInclude(r => r.Room)
+                .Include(s => s.Reservation)
+                .ThenInclude(r => r.Customer)
                 .Include(s => s.Employee)
                 .Include(s => s.Services)
                 .FirstOrDefaultAsync(m => m.UsageId == id);
@@ -98,7 +101,7 @@ namespace DataBase.Controllers
      "DisplayText"
  );
 
-            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "LastName");
+            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "NameWithPosition");
             ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName");
             return View();
         }
@@ -108,7 +111,7 @@ namespace DataBase.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( ServiceUsage serviceUsage)
+        public async Task<IActionResult> Create(ServiceUsage serviceUsage)
         {
             if (ModelState.IsValid)
             {
@@ -125,7 +128,7 @@ namespace DataBase.Controllers
      "DisplayText",
      serviceUsage.ReservationId
  );
-            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "LastName", serviceUsage.EmployeeId);
+            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "NameWithPosition", serviceUsage.EmployeeId);
             ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName", serviceUsage.ServicesId);
             return View(serviceUsage);
         }
@@ -152,7 +155,7 @@ namespace DataBase.Controllers
      "DisplayText",
      serviceUsage.ReservationId
  );
-            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "LastName", serviceUsage.EmployeeId);
+            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "NameWithPosition", serviceUsage.EmployeeId);
             ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName", serviceUsage.ServicesId);
             return View(serviceUsage);
         }
@@ -198,7 +201,7 @@ namespace DataBase.Controllers
     "DisplayText",
     serviceUsage.ReservationId
 );
-            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "LastName", serviceUsage.EmployeeId);
+            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "NameWithPosition", serviceUsage.EmployeeId);
             ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName", serviceUsage.ServicesId);
             return View(serviceUsage);
         }
@@ -213,6 +216,9 @@ namespace DataBase.Controllers
 
             var serviceUsage = await _context.ServiceUsage
                 .Include(s => s.Reservation)
+                .ThenInclude(r => r.Customer)
+                .Include(s => s.Reservation)
+                .ThenInclude(r => r.Room)
                 .Include(s => s.Employee)
                 .Include(s => s.Services)
                 .FirstOrDefaultAsync(m => m.UsageId == id);

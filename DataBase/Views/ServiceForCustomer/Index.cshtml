@@ -1,33 +1,6 @@
 ﻿@model IEnumerable<DataBase.Models.Service>
-
-<h1 class="services-title">Доступні послуги</h1>
-
-@if (ViewBag.ErrorMessage != null)
-{
-    <p class="error-message">@ViewBag.ErrorMessage</p>
-}
-else
-{
-    <div class="services-list">
-        @foreach (var service in Model)
-        {
-            <div class="service-card">
-                <img class="service-card-image" src="@service.ServiceImg" alt="@service.ServicesName" />
-                <h2 class="service-card-title">@service.ServicesName</h2>
-                <p class="service-card-description">@service.Description</p>
-                <p class="service-card-price">Ціна: @service.Price грн</p>
-                <form asp-action="UseService" method="post" class="service-card-form">
-                    <input type="hidden" name="serviceId" value="@service.ServicesId" />
-                    <input type="hidden" name="customerId" value="1" /> <!-- Заміни на динамічний customerId -->
-                    <button type="submit" class="service-card-button">Скористатися послугою</button>
-                </form>
-            </div>
-        }
-    </div>
-}
-
 <style>
-        .services-title {
+    .services-title {
         text-align: center;
         margin: 30px 0;
         font-size: 2em;
@@ -105,3 +78,75 @@ else
         .service-card-button:hover {
             background-color: #27ae60;
         }</style>
+<h1 class="services-title">Доступні послуги</h1>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+
+    <div class="services-list">
+        @foreach (var service in Model)
+        {
+            <div class="service-card">
+                <img class="service-card-image" src="@service.ServiceImg" alt="@service.ServicesName" />
+                <h2 class="service-card-title">@service.ServicesName</h2>
+                <p class="service-card-description">@service.Description</p>
+                <p class="service-card-price">Ціна: @service.Price грн</p>
+                <button class="service-card-button reservation-open-button"
+                        data-toggle="modal"
+                        data-target="#reservation-modal"
+                        data-service-id="@service.ServicesId">
+                    Скористатися послугою
+                </button>
+            </div>
+        }
+    </div>
+
+
+<div id="reservation-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Перевірка бронювання</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="CheckReservation" method="post">
+                <div class="modal-body">
+                    <p>Введіть номер паспорта:</p>
+                    <input type="text" name="passportNumber" id="passport-number" class="form-control" placeholder="Номер паспорта" required />
+                    <input type="hidden" name="serviceId" id="service-id" />
+                    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                    {
+                        <p class="text-danger mt-2">@ViewBag.ErrorMessage</p>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Перевірити</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    // Передаємо serviceId в модальне вікно
+    document.querySelectorAll('.reservation-open-button').forEach(button => {
+        button.addEventListener('click', function () {
+            const serviceId = this.getAttribute('data-service-id');
+            document.getElementById('service-id').value = serviceId;
+        });
+    });
+</script>
+
+

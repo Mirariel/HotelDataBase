@@ -6,7 +6,7 @@
     <p id="reservationId"><strong>Номер бронювання:</strong> @Model.ReservationId</p>
     <p id="customerName"><strong>Ім'я клієнта:</strong> @Model.CustomerName</p>
     <p id="roomNumber"><strong>Номер кімнати:</strong> @Model.RoomNumber</p>
-    <p id="roomType"><strong>Тип кімнати:</strong> @Model.RoomType.Name</p>
+    <p id="roomType"><strong>Тип кімнати:</strong> @Model.RoomType?.TypeName</p>
     <p id="checkInDate"><strong>Дата заїзду:</strong> @Model.CheckInDate.ToShortDateString()</p>
     <p id="checkOutDate"><strong>Дата виїзду:</strong> @Model.CheckOutDate.ToShortDateString()</p>
     <p id="totalPrice"><strong>Загальна сума:</strong> @Model.TotalPrice грн</p>

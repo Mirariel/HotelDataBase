@@ -4,29 +4,27 @@
     ViewData["Title"] = "Rooms by Type";
 }
 
-<h1>Rooms by Type</h1>
+<h1>Кімнати</h1>
 
 <p>
-    <a asp-action="Create">Create New Room</a>
+    <a asp-action="Create">Додати нову кімнати</a>
 </p>
 
 <table class="table">
     <thead>
         <tr>
+
             <th>
-                Room Type
+                Номер кімнати
             </th>
             <th>
-                Room Number
+                Ціна
             </th>
             <th>
-                Price
+                Кількість осіб
             </th>
             <th>
-                Capacity
-            </th>
-            <th>
-                Is Available
+                Доступність
             </th>
             <th></th>
         </tr>
@@ -47,11 +45,11 @@
                 <td>
                     @if (room.IsAvailable)
                     {
-                        <span class="text-success">Available</span>
+                        <span class="text-success">Вільна</span>
                     }
                     else
                     {
-                        <span class="text-danger">Occupied</span>
+                        <span class="text-danger">Зайнята</span>
                     }
                 </td>
                 <td>

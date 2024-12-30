@@ -1,0 +1,47 @@
+﻿@model DataBase.Controllers.IncomeResult
+
+@{
+    ViewBag.Title = "Заробіток за період";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Заробіток за період</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="row" class="bg-light">Доходи від бронювань:</th>
+                        <td>@Model.ReservationIncome.ToString("C")</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="bg-light">Доходи від послуг:</th>
+                        <td>@Model.ServiceIncome.ToString("C")</td>
+                    </tr>
+                    <tr class="table-success">
+                        <th scope="row" class="bg-light">Загальний дохід:</th>
+                        <td><strong>@Model.TotalIncome.ToString("C")</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-center">
+            <a href="@Url.Action("Index", "Statistics")" class="btn btn-secondary">Назад</a>
+        </div>
+    </div>
+</div>
+
+
+    <style>
+        .card {
+            border-radius: 10px;
+        }
+        th, td {
+            font-size: 1.1rem;
+        }
+        th {
+            text-align: left;
+        }
+    </style>

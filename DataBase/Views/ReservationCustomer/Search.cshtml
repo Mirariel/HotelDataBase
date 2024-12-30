@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Пошук резервацій";
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+<div class="container mt-5">
+    <h2>Пошук резервацій за номером паспорта</h2>
+    <form asp-action="FindReservations" method="post" class="mt-4">
+        <div class="form-group">
+            <label for="passportNumber">Номер паспорта:</label>
+            <input type="text" id="passportNumber" name="passportNumber" class="form-control" placeholder="Введіть номер паспорта" required />
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Пошук</button>
+    </form>
+</div>
