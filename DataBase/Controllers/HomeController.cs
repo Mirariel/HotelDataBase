@@ -10,7 +10,6 @@ namespace DataBase.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly HotelDataBaseContext _context;
 
-        // Додаємо контекст для доступу до бази даних
         public HomeController(ILogger<HomeController> logger, HotelDataBaseContext context)
         {
             _logger = logger;

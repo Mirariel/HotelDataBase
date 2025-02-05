@@ -24,7 +24,6 @@ public partial class HotelDataBaseContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        // Add your database connection string if not configured in Startup.cs
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -21,7 +21,6 @@ namespace DataBase.Controllers
             _context = context;
         }
 
-        // GET: Reservations
         public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             ViewData["CheckInDateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "checkin_desc" : "";
@@ -34,7 +33,6 @@ namespace DataBase.Controllers
                     .ThenInclude(room => room.RoomType)
                 .AsQueryable();
 
-            // Фільтрація за ім'ям та прізвищем клієнта
             if (!string.IsNullOrEmpty(searchString))
             {
                 reservations = reservations.Where(r =>
@@ -42,11 +40,9 @@ namespace DataBase.Controllers
                     r.Customer.LastName.Contains(searchString));
             }
 
-            // Виконуємо запит до бази даних
             var result = await reservations.ToListAsync();
 
 
-            // Сортування
             switch (sortOrder)
             {
                 case "checkin_desc":
@@ -66,12 +62,6 @@ namespace DataBase.Controllers
             return View(await reservations.ToListAsync());
         }
 
-
-
-
-
-
-        // GET: Reservations/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -92,7 +82,6 @@ namespace DataBase.Controllers
             return View(reservation);
         }
 
-        // GET: Reservations/Create
         public IActionResult Create()
         {
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName");
@@ -100,9 +89,6 @@ namespace DataBase.Controllers
             return View();
         }
 
-        // POST: Reservations/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ReservationId,CustomerId,RoomId,CheckInDate,CheckOutDate")] Reservation reservation)
@@ -116,18 +102,6 @@ namespace DataBase.Controllers
                     ModelState.AddModelError("", "Check-out date must be after check-in date.");
                 }
 
-                //// Перевірка доступності кімнати
-                //var isRoomAvailable = !_context.Reservation.Any(r =>
-                //    r.RoomId == reservation.RoomId &&
-                //    r.CheckOutDate > reservation.CheckInDate &&
-                //    r.CheckInDate < reservation.CheckOutDate);
-
-                //if (!isRoomAvailable)
-                //{
-                //    ModelState.AddModelError("", "The selected room is already reserved for the specified dates.");
-                //}
-
-                // Отримання даних кімнати для розрахунку ціни
                 var room = await _context.Rooms.Include(r => r.RoomType).FirstOrDefaultAsync(r => r.RoomId == reservation.RoomId);
 
                 if (room == null)
@@ -159,11 +133,6 @@ namespace DataBase.Controllers
             return View(reservation);
         }
 
-
-
-
-
-        // GET: Reservations/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -181,9 +150,6 @@ namespace DataBase.Controllers
             return View(reservation);
         }
 
-        // POST: Reservations/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ReservationId,CustomerId,RoomId,CheckInDate,CheckOutDate")] Reservation reservation)
@@ -210,13 +176,10 @@ namespace DataBase.Controllers
             {
                 try
                 {
-                    // Обчислюємо кількість днів
                     int numberOfDays = (reservation.CheckOutDate - reservation.CheckInDate).Days;
                     if (room.RoomType != null)
-                        // Розрахунок TotalPrice
                         reservation.TotalPrice = numberOfDays * room.RoomType.Price;
 
-                    // Оновлюємо резервацію
                     _context.Update(reservation);
                     await _context.SaveChangesAsync();
                 }
@@ -239,9 +202,6 @@ namespace DataBase.Controllers
             return View(reservation);
         }
 
-
-
-        // GET: Reservations/Delete/5
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -264,7 +224,6 @@ namespace DataBase.Controllers
             return View(reservation);
         }
 
-        // POST: Reservations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
