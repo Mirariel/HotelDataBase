@@ -64,22 +64,23 @@ namespace DataBase.Controllers
 
 
         [HttpPost]
-        public IActionResult ConfirmServiceOrder(int serviceId, int customerId, int reservationId, DateTime selectedDate, string selectedTime)
+        public IActionResult ConfirmServiceOrder(ServiceOrderRequest request)
         {
-            var Date = DateTime.Parse($"{selectedDate.ToShortDateString()} {selectedTime}");
+            var executionDate = DateTime.Parse($"{request.SelectedDate.ToShortDateString()} {request.SelectedTime}");
             try
             {
-                var reservation = _context.Reservation.FirstOrDefault(r => r.ReservationId == reservationId);
+                var reservation = _context.Reservation.FirstOrDefault(r => r.ReservationId == request.ReservationId);
                 if (reservation == null)
                 {
                     TempData["ErrorMessage"] = "Не вдалося знайти актуального бронювання.";
-                    return RedirectToAction("ServiceOrder", new {customerId, serviceId});
+                    return RedirectToAction("ServiceOrder", new { request.CustomerId, request.ServiceId });
                 }
+
                 var usage = new ServiceUsage
                 {
-                    ServicesId = serviceId,
+                    ServicesId = request.ServiceId,
                     ReservationId = reservation.ReservationId,
-                    ExecutionDate = Date
+                    ExecutionDate = executionDate
                 };
 
                 _context.ServiceUsage.Add(usage);
@@ -88,10 +89,12 @@ namespace DataBase.Controllers
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = ex.ToString();
-                return RedirectToAction("ServiceOrder", new { customerId, serviceId });
+                return RedirectToAction("ServiceOrder", new { request.CustomerId, request.ServiceId });
             }
-            return RedirectToAction("ServiceAccess", new { serviceId = serviceId, reservationId = reservationId, executionDate = Date });
+
+            return RedirectToAction("ServiceAccess", new { serviceId = request.ServiceId, reservationId = request.ReservationId, executionDate = executionDate });
         }
+
         public IActionResult ServiceAccess(int serviceId, int reservationId, DateTime executionDate)
         {
             var service = _context.Services.FirstOrDefault(s => s.ServicesId == serviceId);
