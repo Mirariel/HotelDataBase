@@ -26,4 +26,5 @@ public partial class Customer
 
     [NotMapped]
     public string FullName => $"{FirstName} {LastName}";
+
 }

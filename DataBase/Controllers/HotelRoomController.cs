@@ -27,39 +27,39 @@ namespace DataBase.Controllers
             return View(roomType);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SelectCustomer(Customer customer, int roomId, string roomType, DateTime checkInDate, DateTime checkOutDate)
+        public IActionResult SelectCustomer(BookingRequest request)
         {
-            if (string.IsNullOrWhiteSpace(customer.PassportNumber))
+            if (string.IsNullOrWhiteSpace(request.Customer.PassportNumber))
             {
                 ModelState.AddModelError("", "Номер паспорта обов'язковий для бронювання.");
                 return View("Error", "Помилка валідації.");
             }
 
-            var existingCustomer = _context.Customers.FirstOrDefault(c => c.PassportNumber == customer.PassportNumber);
+            var existingCustomer = _context.Customers.FirstOrDefault(c => c.PassportNumber == request.Customer.PassportNumber);
 
             if (existingCustomer == null)
             {
-                if (string.IsNullOrWhiteSpace(customer.FirstName) ||
-                    string.IsNullOrWhiteSpace(customer.LastName) ||
-                    string.IsNullOrWhiteSpace(customer.Phone) ||
-                    string.IsNullOrWhiteSpace(customer.Email) ||
-                    string.IsNullOrWhiteSpace(customer.Address))
+                if (string.IsNullOrWhiteSpace(request.Customer.FirstName) ||
+                    string.IsNullOrWhiteSpace(request.Customer.LastName) ||
+                    string.IsNullOrWhiteSpace(request.Customer.Phone) ||
+                    string.IsNullOrWhiteSpace(request.Customer.Email) ||
+                    string.IsNullOrWhiteSpace(request.Customer.Address))
                 {
                     ModelState.AddModelError("", "Для створення нового користувача потрібно заповнити всі поля.");
                     return View("Error", "Помилка створення користувача.");
                 }
 
-                _context.Customers.Add(customer);
+                _context.Customers.Add(request.Customer);
                 _context.SaveChanges();
 
-                existingCustomer = customer;
+                existingCustomer = request.Customer;
             }
 
-            return View(customer);
+            return View(request.Customer);
         }
+
 
         [HttpGet]
         public IActionResult SelectDate(string roomType)
@@ -108,41 +108,38 @@ namespace DataBase.Controllers
             return View(availableRooms);
         }
 
-
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateReservation(int roomId, Customer customer, DateTime checkInDate, DateTime checkOutDate)
+        public async Task<IActionResult> CreateReservation(ReservationRequest request)
         {
-            if (roomId == 0 || string.IsNullOrWhiteSpace(customer.PassportNumber))
+            if (request.RoomId == 0 || string.IsNullOrWhiteSpace(request.Customer.PassportNumber))
             {
                 TempData["Error"] = "Некоректні дані.";
                 return RedirectToAction("SelectRoomType");
             }
 
-            var existingCustomer = _context.Customers.FirstOrDefault(c => c.PassportNumber == customer.PassportNumber);
+            var existingCustomer = _context.Customers.FirstOrDefault(c => c.PassportNumber == request.Customer.PassportNumber);
 
             if (existingCustomer == null)
             {
-                if (string.IsNullOrWhiteSpace(customer.FirstName) || string.IsNullOrWhiteSpace(customer.LastName))
+                if (string.IsNullOrWhiteSpace(request.Customer.FirstName) || string.IsNullOrWhiteSpace(request.Customer.LastName))
                 {
                     TempData["Error"] = "Для створення нового користувача потрібно заповнити всі поля.";
-                    return RedirectToAction("AvailableRooms", new { roomType = ViewBag.RoomType, checkInDate, checkOutDate });
+                    return RedirectToAction("AvailableRooms", new { roomType = ViewBag.RoomType, request.CheckInDate, request.CheckOutDate });
                 }
 
-                _context.Customers.Add(customer);
+                _context.Customers.Add(request.Customer);
                 await _context.SaveChangesAsync();
-                existingCustomer = customer;
+                existingCustomer = request.Customer;
             }
 
             var reservation = new Reservation
             {
                 CustomerId = existingCustomer.CustomerId,
-                RoomId = roomId,
-                CheckInDate = checkInDate,
-                CheckOutDate = checkOutDate,
-                TotalPrice = _context.Rooms.Include(r => r.RoomType).FirstOrDefault(r => r.RoomId == roomId).RoomType.Price * (decimal)(checkOutDate - checkInDate).TotalDays
+                RoomId = request.RoomId,
+                CheckInDate = request.CheckInDate,
+                CheckOutDate = request.CheckOutDate,
+                TotalPrice = _context.Rooms.Include(r => r.RoomType).FirstOrDefault(r => r.RoomId == request.RoomId).RoomType.Price * (decimal)(request.CheckOutDate - request.CheckInDate).TotalDays
             };
 
             _context.Reservation.Add(reservation);
