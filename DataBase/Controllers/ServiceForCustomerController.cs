@@ -32,17 +32,7 @@ namespace DataBase.Controllers
                 return RedirectToAction("Index");
             }
 
-            var reservations = _context.Reservation
-                .Where(r => r.CustomerId == customer.CustomerId && r.CheckOutDate >= today)
-                .ToList();
-
-            if (!reservations.Any())
-            {
-                TempData["ErrorMessage"] = $"У клієнта з номером паспорта {passportNumber} немає активних бронювань.";
-                return RedirectToAction("Index");
-            }
-
-            return RedirectToAction("ServiceOrder", new { customerId = customer.CustomerId, serviceId = serviceId, reservationId = reservations.First().ReservationId });
+            return RedirectToAction("ServiceOrder", new { customerId = customer.CustomerId, serviceId = serviceId});
         }
 
         public IActionResult ServiceOrder(int customerId, int serviceId)

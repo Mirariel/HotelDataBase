@@ -40,9 +40,6 @@ namespace DataBase.Controllers
                     r.Customer.LastName.Contains(searchString));
             }
 
-            var result = await reservations.ToListAsync();
-
-
             switch (sortOrder)
             {
                 case "checkin_desc":
