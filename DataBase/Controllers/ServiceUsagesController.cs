@@ -20,7 +20,6 @@ namespace DataBase.Controllers
             _context = context;
         }
 
-        // GET: ServiceUsages
         public async Task<IActionResult> Index(string searchString, string sortOrder)
         {
             ViewData["ServiceSortParam"] = String.IsNullOrEmpty(sortOrder) ? "service_desc" : "";
@@ -38,7 +37,6 @@ namespace DataBase.Controllers
                 .AsQueryable();
 
 
-            // Фільтрація за іменем або прізвищем клієнта
             if (!String.IsNullOrEmpty(searchString))
             {
                 serviceUsages = serviceUsages.Where(s =>
@@ -47,7 +45,6 @@ namespace DataBase.Controllers
                 );
             }
 
-            // Сортування
             serviceUsages = sortOrder switch
             {
                 "service_desc" => serviceUsages.OrderByDescending(s => s.Services.ServicesName),
@@ -58,14 +55,9 @@ namespace DataBase.Controllers
                 _ => serviceUsages.OrderBy(s => s.Services.ServicesName),
             };
 
-            // Повертаємо результат до View
             return View(await serviceUsages.ToListAsync());
         }
 
-
-
-
-        // GET: ServiceUsages/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -88,15 +80,13 @@ namespace DataBase.Controllers
 
             return View(serviceUsage);
         }
-
-        // GET: ServiceUsages/Create
         public IActionResult Create()
         {
             ViewData["ReservationId"] = new SelectList(
      _context.Reservation
          .Include(r => r.Customer)
          .Include(r => r.Room)
-         .ToList(), // Завантажує дані
+         .ToList(),
      "ReservationId",
      "DisplayText"
  );
@@ -106,9 +96,6 @@ namespace DataBase.Controllers
             return View();
         }
 
-        // POST: ServiceUsages/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ServiceUsage serviceUsage)
@@ -123,7 +110,7 @@ namespace DataBase.Controllers
      _context.Reservation
          .Include(r => r.Customer)
          .Include(r => r.Room)
-         .ToList(), // Завантажує дані
+         .ToList(),
      "ReservationId",
      "DisplayText",
      serviceUsage.ReservationId
@@ -132,8 +119,6 @@ namespace DataBase.Controllers
             ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName", serviceUsage.ServicesId);
             return View(serviceUsage);
         }
-
-        // GET: ServiceUsages/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -150,7 +135,7 @@ namespace DataBase.Controllers
      _context.Reservation
          .Include(r => r.Customer)
          .Include(r => r.Room)
-         .ToList(), // Завантажує дані
+         .ToList(),
      "ReservationId",
      "DisplayText",
      serviceUsage.ReservationId
@@ -160,9 +145,6 @@ namespace DataBase.Controllers
             return View(serviceUsage);
         }
 
-        // POST: ServiceUsages/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ServiceUsage serviceUsage)
@@ -205,8 +187,6 @@ namespace DataBase.Controllers
             ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName", serviceUsage.ServicesId);
             return View(serviceUsage);
         }
-
-        // GET: ServiceUsages/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -230,7 +210,6 @@ namespace DataBase.Controllers
             return View(serviceUsage);
         }
 
-        // POST: ServiceUsages/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -36,7 +36,6 @@ namespace DataBase.Controllers
                 return View(model);
             }
 
-            // Знаходимо користувача у вашій базі даних
             var employee = await _context.Employees
                 .FirstOrDefaultAsync(e => e.Email == model.Email);
 
@@ -55,7 +54,6 @@ namespace DataBase.Controllers
 
 
 
-            // Створюємо аутентифікацію через кукі
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));

@@ -38,12 +38,10 @@ namespace DataBase.Controllers
                 return View("Error", "Помилка валідації.");
             }
 
-            // Пошук існуючого користувача за номером паспорта
             var existingCustomer = _context.Customers.FirstOrDefault(c => c.PassportNumber == customer.PassportNumber);
 
             if (existingCustomer == null)
             {
-                // Якщо користувача немає, перевіряємо, чи всі обов'язкові поля заповнені
                 if (string.IsNullOrWhiteSpace(customer.FirstName) ||
                     string.IsNullOrWhiteSpace(customer.LastName) ||
                     string.IsNullOrWhiteSpace(customer.Phone) ||
@@ -54,11 +52,9 @@ namespace DataBase.Controllers
                     return View("Error", "Помилка створення користувача.");
                 }
 
-                // Додаємо нового користувача до бази даних
                 _context.Customers.Add(customer);
                 _context.SaveChanges();
 
-                // Отримуємо ідентифікатор нового користувача
                 existingCustomer = customer;
             }
 
