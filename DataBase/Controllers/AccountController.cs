@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using DataBase.Services;
 using DataBase.Models;
+using DataBase.Extensions;
 
 namespace DataBase.Controllers
 {
@@ -41,8 +42,7 @@ namespace DataBase.Controllers
 
             if (!(employee != null && PasswordHashService.VerifyPassword(model.Password, employee.PasswordHash)))
             {
-                ModelState.AddModelError("", "Пошта або пароль неправильні!"); 
-                return View(model);
+                return this.ViewWithModelError("Пошта або пароль неправильні!", model);
             }
             var claims = new List<Claim>
         {

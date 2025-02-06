@@ -81,7 +81,7 @@ namespace DataBase.Controllers
 
         public IActionResult Create()
         {
-            ViewData["RoomTypeId"] = new SelectList(_context.RoomTypes, "TypeId", "TypeName");
+            SetRoomTypeViewData();
             return View();
         }
 
@@ -96,7 +96,7 @@ namespace DataBase.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoomTypeId"] = new SelectList(_context.RoomTypes, "TypeId", "TypeName", room.RoomTypeId);
+            SetRoomTypeViewData(room.RoomTypeId);
             return View(room);
         }
 
@@ -112,7 +112,7 @@ namespace DataBase.Controllers
             {
                 return NotFound();
             }
-            ViewData["RoomTypeId"] = new SelectList(_context.RoomTypes, "TypeId", "TypeName", room.RoomTypeId);
+            SetRoomTypeViewData(room.RoomTypeId);
             return View(room);
         }
 
@@ -146,7 +146,7 @@ namespace DataBase.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoomTypeId"] = new SelectList(_context.RoomTypes, "TypeId", "TypeName", room.RoomTypeId);
+            SetRoomTypeViewData(room.RoomTypeId);
             return View(room);
         }
 
@@ -169,8 +169,6 @@ namespace DataBase.Controllers
             return View(room);
         }
 
-
-
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -190,6 +188,10 @@ namespace DataBase.Controllers
         private bool RoomExists(int id)
         {
             return _context.Rooms.Any(e => e.RoomId == id);
+        }
+        private void SetRoomTypeViewData(int? roomTypeId = null)
+        {
+            ViewData["RoomTypeId"] = new SelectList(_context.RoomTypes, "TypeId", "TypeName", roomTypeId);
         }
     }
 }

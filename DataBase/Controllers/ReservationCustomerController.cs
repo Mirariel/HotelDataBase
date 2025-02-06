@@ -2,6 +2,7 @@
 using DataBase.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using DataBase.Extensions;
 
 namespace DataBase.Controllers
 {
@@ -25,8 +26,7 @@ namespace DataBase.Controllers
             var customer = _context.Customers.FirstOrDefault(c => c.PassportNumber == passportNumber);
             if (customer == null)
             {
-                TempData["ErrorMessage"] = $"Клієнта з номером паспорта {passportNumber} не знайдено.";
-                return RedirectToAction("Search");
+                return this.RedirectWithTempError($"Клієнта з номером паспорта {passportNumber} не знайдено.", "Search");
             }
 
             var reservations = _context.Reservation
@@ -52,8 +52,7 @@ namespace DataBase.Controllers
 
             if (reservation == null)
             {
-                TempData["ErrorMessage"] = "Резервацію не знайдено.";
-                return RedirectToAction("Search");
+                return this.RedirectWithTempError("Резервацію не знайдено.", "Search");
             }
 
             var services = _context.ServiceUsage
