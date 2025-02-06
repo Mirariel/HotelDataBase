@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DataBase.Extensions;
+using DataBase.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DataBase.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace DataBase.Controllers
 {
@@ -14,10 +11,19 @@ namespace DataBase.Controllers
     public class ServiceUsagesController : Controller
     {
         private readonly HotelDataBaseContext _context;
+        private readonly SortingDictionary<ServiceUsage> _serviceUsageSorts = new SortingDictionary<ServiceUsage>
+        {
+            { "service_desc", q => q.OrderByDescending(s => s.Services.ServicesName) },
+            { "employee_desc", q => q.OrderByDescending(s => s.Employee.LastName) },
+            { "employee_asc", q => q.OrderBy(s => s.Employee.LastName) },
+            { "date_desc", q => q.OrderByDescending(s => s.ExecutionDate) },
+            { "date_asc", q => q.OrderBy(s => s.ExecutionDate) }
+        }; 
 
         public ServiceUsagesController(HotelDataBaseContext context)
         {
             _context = context;
+            _serviceUsageSorts.SetDefaultSort(q => q.OrderBy(s => s.ExecutionDate));
         }
 
         public async Task<IActionResult> Index(string searchString, string sortOrder)
@@ -36,7 +42,6 @@ namespace DataBase.Controllers
                 .Include(s => s.Employee)
                 .AsQueryable();
 
-
             if (!String.IsNullOrEmpty(searchString))
             {
                 serviceUsages = serviceUsages.Where(s =>
@@ -45,15 +50,7 @@ namespace DataBase.Controllers
                 );
             }
 
-            serviceUsages = sortOrder switch
-            {
-                "service_desc" => serviceUsages.OrderByDescending(s => s.Services.ServicesName),
-                "employee_desc" => serviceUsages.OrderByDescending(s => s.Employee.LastName),
-                "employee_asc" => serviceUsages.OrderBy(s => s.Employee.LastName),
-                "date_desc" => serviceUsages.OrderByDescending(s => s.ExecutionDate),
-                "date_asc" => serviceUsages.OrderBy(s => s.ExecutionDate),
-                _ => serviceUsages.OrderBy(s => s.Services.ServicesName),
-            };
+            serviceUsages = _serviceUsageSorts.ApplySorting(serviceUsages, sortOrder);
 
             return View(await serviceUsages.ToListAsync());
         }
