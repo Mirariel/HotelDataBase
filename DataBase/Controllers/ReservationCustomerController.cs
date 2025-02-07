@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DataBase.Models;
+using DataBase.Extensions;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using DataBase.Extensions;
+using System.Threading.Tasks;
 
 namespace DataBase.Controllers
 {
@@ -21,20 +22,13 @@ namespace DataBase.Controllers
         }
 
         [HttpPost]
-        public IActionResult FindReservations(string passportNumber)
+        public async Task<IActionResult> FindReservations(string passportNumber)
         {
-            var customer = _context.Customers.FirstOrDefault(c => c.PassportNumber == passportNumber);
+            var customer = await GetCustomerByPassportAsync(passportNumber);
             if (customer == null)
-            {
                 return this.ViewWithTempError($"Клієнта з номером паспорта {passportNumber} не знайдено.", "Search");
-            }
 
-            var reservations = _context.Reservation
-                .Where(r => r.CustomerId == customer.CustomerId)
-                .Include(r=>r.Room)
-                .ThenInclude(r=>r.RoomType)
-                .OrderBy(r => r.CheckInDate)
-                .ToList();
+            var reservations = await GetReservationsByCustomerAsync(customer.CustomerId);
 
             ViewBag.Customer = customer;
             ViewBag.Today = DateTime.Now;
@@ -42,20 +36,44 @@ namespace DataBase.Controllers
             return View("ReservationList", reservations);
         }
 
-
-        public IActionResult ReservationDetails(int reservationId)
+        public async Task<IActionResult> ReservationDetails(int reservationId)
         {
-            var reservation = _context.Reservation
-                .Include(r=>r.Room)
-                .ThenInclude(r=>r.RoomType)
-                .FirstOrDefault(r => r.ReservationId == reservationId);
-
+            var reservation = await GetReservationWithDetailsAsync(reservationId);
             if (reservation == null)
-            {
                 return this.ViewWithTempError("Резервацію не знайдено.", "Search");
-            }
 
-            var services = _context.ServiceUsage
+            var services = await GetServicesByReservationAsync(reservationId);
+
+            ViewBag.Reservation = reservation;
+            return View(services);
+        }
+
+        private async Task<Customer> GetCustomerByPassportAsync(string passportNumber)
+        {
+            return await _context.Customers.FirstOrDefaultAsync(c => c.PassportNumber == passportNumber);
+        }
+
+        private async Task<List<Reservation>> GetReservationsByCustomerAsync(int customerId)
+        {
+            return await _context.Reservation
+                .Where(r => r.CustomerId == customerId)
+                .Include(r => r.Room)
+                .ThenInclude(r => r.RoomType)
+                .OrderBy(r => r.CheckInDate)
+                .ToListAsync();
+        }
+
+        private async Task<Reservation> GetReservationWithDetailsAsync(int reservationId)
+        {
+            return await _context.Reservation
+                .Include(r => r.Room)
+                .ThenInclude(r => r.RoomType)
+                .FirstOrDefaultAsync(r => r.ReservationId == reservationId);
+        }
+
+        private async Task<List<object>> GetServicesByReservationAsync(int reservationId)
+        {
+            return await _context.ServiceUsage
                 .Where(su => su.ReservationId == reservationId)
                 .Select(su => new
                 {
@@ -63,10 +81,7 @@ namespace DataBase.Controllers
                     su.ExecutionDate,
                     su.Services.Price
                 })
-                .ToList();
-
-            ViewBag.Reservation = reservation;
-            return View(services);
+                .ToListAsync<object>();
         }
     }
 }

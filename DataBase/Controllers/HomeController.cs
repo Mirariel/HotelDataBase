@@ -18,26 +18,14 @@ namespace DataBase.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var roomTypes = await _context.RoomTypes.ToListAsync();
+            var roomTypes = await GetRoomTypesAsync();
             return View(roomTypes);
         }
-
-
 
         [HttpGet]
         public async Task<IActionResult> GetRooms()
         {
-            var rooms = await _context.Rooms
-                .Select(r => new
-                {
-                    r.RoomId,
-                    r.RoomType,
-                    r.RoomType.Price,
-                    r.RoomNumber,
-                    r.TypeAndNumber
-                })
-                .ToListAsync();
-
+            var rooms = await GetRoomsAsync();
             return Json(rooms);
         }
 
@@ -51,6 +39,24 @@ namespace DataBase.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        private async Task<List<RoomType>> GetRoomTypesAsync()
+        {
+            return await _context.RoomTypes.ToListAsync();
+        }
+
+        private async Task<List<object>> GetRoomsAsync()
+        {
+            return await _context.Rooms
+                .Select(r => new
+                {
+                    r.RoomId,
+                    r.RoomType,
+                    r.RoomType.Price,
+                    r.RoomNumber,
+                    r.TypeAndNumber
+                })
+                .ToListAsync<object>();
+        }
     }
 }
-

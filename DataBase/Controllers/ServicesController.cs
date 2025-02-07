@@ -1,7 +1,10 @@
-﻿using DataBase.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using DataBase.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DataBase.Controllers
 {
@@ -17,23 +20,15 @@ namespace DataBase.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Services.ToListAsync());
+            var services = await GetServicesAsync();
+            return View(services);
         }
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
+            var service = await GetServiceByIdAsync(id);
+            if (service == null) 
                 return NotFound();
-            }
-
-            var service = await _context.Services
-                .FirstOrDefaultAsync(m => m.ServicesId == id);
-            if (service == null)
-            {
-                return NotFound();
-            }
-
             return View(service);
         }
 
@@ -46,28 +41,17 @@ namespace DataBase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Service service)
         {
-            if (!ModelState.IsValid)
-            {
+            if (!ModelState.IsValid) 
                 return View(service);
-
-            }
-            _context.Add(service);
-            await _context.SaveChangesAsync();
+            await AddServiceAsync(service);
             return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
+            var service = await GetServiceByIdAsync(id);
+            if (service == null) 
                 return NotFound();
-            }
-
-            var service = await _context.Services.FindAsync(id);
-            if (service == null)
-            {
-                return NotFound();
-            }
             return View(service);
         }
 
@@ -75,45 +59,30 @@ namespace DataBase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Service service)
         {
-            if (id != service.ServicesId)
-            {
+            if (id != service.ServicesId) 
                 return NotFound();
-            }
-
             if (!ModelState.IsValid)
-            {
                 return View(service);
-            }
+
             try
             {
-                _context.Update(service);
-                await _context.SaveChangesAsync();
+                await UpdateServiceAsync(service);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ServiceExists(service.ServicesId))
-                {
+                if (!ServiceExists(service.ServicesId)) 
                     return NotFound();
-                }
                 throw;
             }
+
             return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
+            var service = await GetServiceByIdAsync(id);
+            if (service == null) 
                 return NotFound();
-            }
-
-            var service = await _context.Services
-                .FirstOrDefaultAsync(m => m.ServicesId == id);
-            if (service == null)
-            {
-                return NotFound();
-            }
-
             return View(service);
         }
 
@@ -121,14 +90,39 @@ namespace DataBase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            await DeleteServiceAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+        private async Task<List<Service>> GetServicesAsync()
+        {
+            return await _context.Services.ToListAsync();
+        }
+
+        private async Task<Service> GetServiceByIdAsync(int? id)
+        {
+            return id == null ? null : await _context.Services.FirstOrDefaultAsync(m => m.ServicesId == id);
+        }
+
+        private async Task AddServiceAsync(Service service)
+        {
+            _context.Add(service);
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task UpdateServiceAsync(Service service)
+        {
+            _context.Update(service);
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task DeleteServiceAsync(int id)
+        {
             var service = await _context.Services.FindAsync(id);
             if (service != null)
             {
                 _context.Services.Remove(service);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool ServiceExists(int id)

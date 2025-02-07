@@ -23,23 +23,37 @@ namespace DataBase.Controllers
         [HttpPost]
         public ActionResult IncomeByPeriod(DateTime startDate, DateTime endDate)
         {
-            var income = _context.Database.SqlQueryRaw<IncomeResult>(
-                "EXEC GetIncomeByPeriod @StartDate = {0}, @EndDate = {1}",
-                startDate, endDate).AsEnumerable().FirstOrDefault();
-
+            var income = GetIncomeByPeriodAsync(startDate, endDate);
             return View("IncomeByPeriod", income);
         }
 
         public ActionResult TopServices()
         {
-            var topServices = _context.Database.SqlQueryRaw<TopService>("EXEC GetTopServices").ToList();
+            var topServices = GetTopServicesAsync();
             return View("TopServices", topServices);
         }
 
         public ActionResult TopEmployees()
         {
-            var topEmployees = _context.Database.SqlQueryRaw<TopEmployee>("EXEC GetTopEmployeesByServiceUsage").ToList();
+            var topEmployees = GetTopEmployeesAsync();
             return View("TopEmployees", topEmployees);
+        }
+
+        private IncomeResult GetIncomeByPeriodAsync(DateTime startDate, DateTime endDate)
+        {
+            return _context.Database.SqlQueryRaw<IncomeResult>(
+                "EXEC GetIncomeByPeriod @StartDate = {0}, @EndDate = {1}",
+                startDate, endDate).AsEnumerable().FirstOrDefault();
+        }
+
+        private List<TopService> GetTopServicesAsync()
+        {
+            return _context.Database.SqlQueryRaw<TopService>("EXEC GetTopServices").ToList();
+        }
+
+        private List<TopEmployee> GetTopEmployeesAsync()
+        {
+            return _context.Database.SqlQueryRaw<TopEmployee>("EXEC GetTopEmployeesByServiceUsage").ToList();
         }
     }
 
