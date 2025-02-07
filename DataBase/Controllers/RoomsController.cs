@@ -74,15 +74,15 @@ namespace DataBase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RoomId,RoomNumber,RoomTypeId,IsAvailable")] Room room)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(room);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                SetRoomTypeViewData(room.RoomTypeId);
+                return View(room);
             }
-            SetRoomTypeViewData(room.RoomTypeId);
-            return View(room);
+            _context.Add(room);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -110,29 +110,25 @@ namespace DataBase.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(room);
-                    await _context.SaveChangesAsync();
-
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RoomExists(room.RoomId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                SetRoomTypeViewData(room.RoomTypeId);
+                return View(room);
             }
-            SetRoomTypeViewData(room.RoomTypeId);
-            return View(room);
+            try
+            {
+                _context.Update(room);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RoomExists(room.RoomId))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int? id)

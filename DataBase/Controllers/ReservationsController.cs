@@ -96,17 +96,11 @@ namespace DataBase.Controllers
 
                 if (ModelState.IsValid)
                 {
-
-                    int numberOfDays = (reservation.CheckOutDate - reservation.CheckInDate).Days;
-                    if (room.RoomType != null)
-                        reservation.TotalPrice = numberOfDays * room.RoomType.Price;
-
+                    SetReservationTotalPrice(reservation, room.RoomType);
                     _context.Add(reservation);
                     await _context.SaveChangesAsync();
-
                     return RedirectToAction(nameof(Index));
                 }
-
             }
             catch (Exception ex)
             {
@@ -146,7 +140,6 @@ namespace DataBase.Controllers
                 ModelState.AddModelError("", "Check-out date must be after check-in date.");
             }
 
-
             var room = await _context.Rooms.Include(r => r.RoomType).FirstOrDefaultAsync(r => r.RoomId == reservation.RoomId);
 
             if (room == null)
@@ -154,33 +147,27 @@ namespace DataBase.Controllers
                 ModelState.AddModelError("", "Selected room does not exist.");
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    int numberOfDays = (reservation.CheckOutDate - reservation.CheckInDate).Days;
-                    if (room.RoomType != null)
-                        reservation.TotalPrice = numberOfDays * room.RoomType.Price;
-
-                    _context.Update(reservation);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReservationExists(reservation.ReservationId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                SetCustomerRoomViewData(reservation);
+                return View(reservation);
             }
+            try
+            {
+                SetReservationTotalPrice(reservation, room.RoomType);
 
-            SetCustomerRoomViewData(reservation);
-            return View(reservation);
+                _context.Update(reservation);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ReservationExists(reservation.ReservationId))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
@@ -214,7 +201,6 @@ namespace DataBase.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
         private bool ReservationExists(int id)
         {
             return _context.Reservation.Any(e => e.ReservationId == id);
@@ -224,6 +210,12 @@ namespace DataBase.Controllers
         {
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName", reservation?.CustomerId);
             ViewData["RoomId"] = new SelectList(_context.Rooms.Include(room => room.RoomType), "RoomId", "TypeAndNumber", reservation?.RoomId);
+        }
+        private void SetReservationTotalPrice(Reservation reservation, RoomType? roomType)
+        {
+            int numberOfDays = (reservation.CheckOutDate - reservation.CheckInDate).Days;
+            if (roomType != null)
+                reservation.TotalPrice = numberOfDays * roomType.Price;
         }
     }
 }

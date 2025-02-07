@@ -26,7 +26,7 @@ namespace DataBase.Controllers
             var customer = _context.Customers.FirstOrDefault(c => c.PassportNumber == passportNumber);
             if (customer == null)
             {
-                return this.RedirectWithTempError($"Клієнта з номером паспорта {passportNumber} не знайдено.", "Search");
+                return this.ViewWithTempError($"Клієнта з номером паспорта {passportNumber} не знайдено.", "Search");
             }
 
             var reservations = _context.Reservation
@@ -52,7 +52,7 @@ namespace DataBase.Controllers
 
             if (reservation == null)
             {
-                return this.RedirectWithTempError("Резервацію не знайдено.", "Search");
+                return this.ViewWithTempError("Резервацію не знайдено.", "Search");
             }
 
             var services = _context.ServiceUsage

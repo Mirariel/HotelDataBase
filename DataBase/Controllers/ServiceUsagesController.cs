@@ -18,7 +18,7 @@ namespace DataBase.Controllers
             { "employee_asc", q => q.OrderBy(s => s.Employee.LastName) },
             { "date_desc", q => q.OrderByDescending(s => s.ExecutionDate) },
             { "date_asc", q => q.OrderBy(s => s.ExecutionDate) }
-        }; 
+        };
 
         public ServiceUsagesController(HotelDataBaseContext context)
         {
@@ -87,14 +87,14 @@ namespace DataBase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ServiceUsage serviceUsage)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(serviceUsage);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                SetServiceUsageViewData(serviceUsage);
+                return View(serviceUsage);
             }
-            SetServiceUsageViewData(serviceUsage);
-            return View(serviceUsage);
+            _context.Add(serviceUsage);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Edit(int? id)
         {
@@ -122,28 +122,25 @@ namespace DataBase.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(serviceUsage);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ServiceUsageExists(serviceUsage.UsageId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                SetServiceUsageViewData(serviceUsage);
+                return View(serviceUsage);
             }
-            SetServiceUsageViewData(serviceUsage);
-            return View(serviceUsage);
+            try
+            {
+                _context.Update(serviceUsage);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ServiceUsageExists(serviceUsage.UsageId))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+            return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Delete(int? id)
         {

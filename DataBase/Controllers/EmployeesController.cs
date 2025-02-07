@@ -48,30 +48,29 @@ namespace DataBase.Controllers
             return View();
         }
 
-      
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Employee employee)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                if (string.IsNullOrWhiteSpace(employee.Password))
-                {
-                    ModelState.AddModelError("Password", "Пароль є обов'язковим.");
-                    return View(employee);
-                }
-
-                employee.PasswordHash = PasswordHashService.HashPassword(employee.Password);
-
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                return View(employee);
             }
 
-            return View(employee);
-        }
+            if (string.IsNullOrWhiteSpace(employee.Password))
+            {
+                ModelState.AddModelError("Password", "Пароль є обов'язковим.");
+                return View(employee);
+            }
 
+            employee.PasswordHash = PasswordHashService.HashPassword(employee.Password);
+
+            _context.Add(employee);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -96,31 +95,28 @@ namespace DataBase.Controllers
             {
                 return NotFound();
             }
-             if (employee.Password!=null)
+            if (employee.Password != null)
             {
-                employee.PasswordHash=PasswordHashService.HashPassword(employee.Password);
+                employee.PasswordHash = PasswordHashService.HashPassword(employee.Password);
             }
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(employee);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmployeeExists(employee.EmployeesId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View(employee);
             }
-            return View(employee);
+            try
+            {
+                _context.Update(employee);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EmployeeExists(employee.EmployeesId))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int? id)
