@@ -18,10 +18,9 @@ namespace DataBase.Controllers
             _context = context;
         }
 
-
         public IActionResult Index()
         {
-           return RedirectToAction("Login");
+            return RedirectToAction("Login");
         }
 
         public IActionResult Login()
@@ -33,39 +32,42 @@ namespace DataBase.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
 
-            var employee = await _context.Employees
-                .FirstOrDefaultAsync(e => e.Email == model.Email);
+            var employee = await GetEmployeeByEmailAsync(model.Email);
 
-            if (!(employee != null && PasswordHashService.VerifyPassword(model.Password, employee.PasswordHash)))
-            {
+            if (!IsValidCredentials(employee, model.Password))
                 return this.ViewWithModelError("Пошта або пароль неправильні!", model);
-            }
-            var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, employee.FullName),
 
-        };
-
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-
-
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity));
+            await SignInWithFullNameAsync(employee.FullName);
 
             return RedirectToAction("Index", "Home");
         }
+
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
 
             return RedirectToAction("Index", "Home");
         }
-    }
 
+        private async Task<Employee?> GetEmployeeByEmailAsync(string email)
+        {
+            return await _context.Employees.FirstOrDefaultAsync(e => e.Email == email);
+        }
+
+        private async Task SignInWithFullNameAsync(string fullName)
+        {
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, fullName) };
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(claimsIdentity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+        }
+
+        private bool IsValidCredentials(Employee? employee, string password)
+        {
+            return employee is not null && PasswordHashService.VerifyPassword(password, employee.PasswordHash);
+        }
+    }
 }

@@ -12,62 +12,26 @@ namespace DataBase.Controllers
     public class ReservationsController : Controller
     {
         private readonly HotelDataBaseContext _context;
-
-        private readonly SortingDictionary<Reservation> _reservationSorts = new SortingDictionary<Reservation>
-        {
-            { "checkin_desc", r => r.OrderByDescending(x => x.CheckInDate) },
-            { "totalprice", r => r.OrderBy(x => x.TotalPrice) },
-            { "totalprice_desc", r => r.OrderByDescending(x => x.TotalPrice) }
-        };
+        private readonly SortingDictionary<Reservation> _reservationSorts;
 
         public ReservationsController(HotelDataBaseContext context)
         {
             _context = context;
-            _reservationSorts.SetDefaultSort(r => r.OrderBy(x => x.CheckInDate));
+            _reservationSorts = InitializeSortingDictionary();
         }
 
         public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            ViewData["CheckInDateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "checkin_desc" : "";
-            ViewData["TotalPriceSortParm"] = sortOrder == "totalprice" ? "totalprice_desc" : "totalprice";
-            ViewData["CurrentFilter"] = searchString;
-
-            var reservations = _context.Reservation
-                .Include(r => r.Customer)
-                .Include(r => r.Room)
-                    .ThenInclude(room => room.RoomType)
-                .AsQueryable();
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                reservations = reservations.Where(r =>
-                    r.Customer.FirstName.Contains(searchString) ||
-                    r.Customer.LastName.Contains(searchString));
-            }
-
+            SetIndexViewData(sortOrder, searchString);
+            var reservations = GetFilteredReservations(searchString);
             reservations = _reservationSorts.ApplySorting(reservations, sortOrder);
-
             return View(await reservations.ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var reservation = await _context.Reservation
-                .Include(r => r.Customer)
-                .Include(r => r.Room)
-                .ThenInclude(r => r.RoomType)
-                .FirstOrDefaultAsync(m => m.ReservationId == id);
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            return View(reservation);
+            var reservation = await GetReservationWithDetails(id);
+            return reservation == null ? NotFound() : View(reservation);
         }
 
         public IActionResult Create()
@@ -82,31 +46,16 @@ namespace DataBase.Controllers
         {
             try
             {
-                if (reservation.CheckInDate >= reservation.CheckOutDate)
-                {
-                    ModelState.AddModelError("", "Check-out date must be after check-in date.");
-                }
-
-                var room = await _context.Rooms.Include(r => r.RoomType).FirstOrDefaultAsync(r => r.RoomId == reservation.RoomId);
-
-                if (room == null)
-                {
-                    ModelState.AddModelError("", "Selected room does not exist.");
-                }
+                var room = await GetRoomWithDetails(reservation.RoomId);
+                ValidateReservation(reservation, room);
 
                 if (ModelState.IsValid)
                 {
-
-                    int numberOfDays = (reservation.CheckOutDate - reservation.CheckInDate).Days;
-                    if (room.RoomType != null)
-                        reservation.TotalPrice = numberOfDays * room.RoomType.Price;
-
+                    SetReservationTotalPrice(reservation, room.RoomType);
                     _context.Add(reservation);
                     await _context.SaveChangesAsync();
-
                     return RedirectToAction(nameof(Index));
                 }
-
             }
             catch (Exception ex)
             {
@@ -118,16 +67,9 @@ namespace DataBase.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
+            var reservation = await GetReservationById(id);
+            if (reservation == null) 
                 return NotFound();
-            }
-
-            var reservation = await _context.Reservation.FindAsync(id);
-            if (reservation == null)
-            {
-                return NotFound();
-            }
             SetCustomerRoomViewData(reservation);
             return View(reservation);
         }
@@ -136,84 +78,118 @@ namespace DataBase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ReservationId,CustomerId,RoomId,CheckInDate,CheckOutDate")] Reservation reservation)
         {
-            if (id != reservation.ReservationId)
-            {
+            if (id != reservation.ReservationId) 
                 return NotFound();
-            }
+            var room = await GetRoomWithDetails(reservation.RoomId);
+            ValidateReservation(reservation, room);
 
-            if (reservation.CheckInDate >= reservation.CheckOutDate)
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Check-out date must be after check-in date.");
+                SetCustomerRoomViewData(reservation);
+                return View(reservation);
             }
-
-
-            var room = await _context.Rooms.Include(r => r.RoomType).FirstOrDefaultAsync(r => r.RoomId == reservation.RoomId);
-
-            if (room == null)
+            try
             {
-                ModelState.AddModelError("", "Selected room does not exist.");
+                SetReservationTotalPrice(reservation, room.RoomType);
+                _context.Update(reservation);
+                await _context.SaveChangesAsync();
             }
-
-            if (ModelState.IsValid)
+            catch (DbUpdateConcurrencyException)
             {
-                try
-                {
-                    int numberOfDays = (reservation.CheckOutDate - reservation.CheckInDate).Days;
-                    if (room.RoomType != null)
-                        reservation.TotalPrice = numberOfDays * room.RoomType.Price;
-
-                    _context.Update(reservation);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReservationExists(reservation.ReservationId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                if (!ReservationExists(reservation.ReservationId)) 
+                    return NotFound();
+                throw;
             }
-
-            SetCustomerRoomViewData(reservation);
-            return View(reservation);
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var reservation = await _context.Reservation
-                .Include(r => r.Room)
-                .ThenInclude(r => r.RoomType)
-                .Include(r => r.Customer)
-                .FirstOrDefaultAsync(m => m.ReservationId == id);
-
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            return View(reservation);
+            var reservation = await GetReservationWithDetails(id);
+            return reservation == null ? NotFound() : View(reservation);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sqlQuery = "DELETE FROM Reservation WHERE ReservationID = @id";
-            await _context.Database.ExecuteSqlRawAsync(sqlQuery, new SqlParameter("@id", id));
+            await DeleteReservationById(id);
             return RedirectToAction(nameof(Index));
         }
 
+        private SortingDictionary<Reservation> InitializeSortingDictionary()
+        {
+            var sortingDictionary = new SortingDictionary<Reservation>
+            {
+                { "checkin_desc", r => r.OrderByDescending(x => x.CheckInDate) },
+                { "totalprice", r => r.OrderBy(x => x.TotalPrice) },
+                { "totalprice_desc", r => r.OrderByDescending(x => x.TotalPrice) }
+            };
+            sortingDictionary.SetDefaultSort(r => r.OrderBy(x => x.CheckInDate));
+            return sortingDictionary;
+        }
+
+        private void SetIndexViewData(string sortOrder, string searchString)
+        {
+            ViewData["CheckInDateSortParm"] = string.IsNullOrEmpty(sortOrder) ? "checkin_desc" : "";
+            ViewData["TotalPriceSortParm"] = sortOrder == "totalprice" ? "totalprice_desc" : "totalprice";
+            ViewData["CurrentFilter"] = searchString;
+        }
+
+        private IQueryable<Reservation> GetFilteredReservations(string searchString)
+        {
+            var reservations = _context.Reservation
+                .Include(r => r.Customer)
+                .Include(r => r.Room)
+                    .ThenInclude(room => room.RoomType)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                reservations = reservations.Where(r =>
+                    r.Customer.FirstName.Contains(searchString) ||
+                    r.Customer.LastName.Contains(searchString));
+            }
+            return reservations;
+        }
+
+        private async Task<Reservation> GetReservationWithDetails(int? id)
+        {
+            return id == null ? null : await _context.Reservation
+                .Include(r => r.Customer)
+                .Include(r => r.Room)
+                .ThenInclude(r => r.RoomType)
+                .FirstOrDefaultAsync(m => m.ReservationId == id);
+        }
+
+        private async Task<Reservation> GetReservationById(int? id)
+        {
+            return id == null ? null : await _context.Reservation.FindAsync(id);
+        }
+
+        private async Task<Room> GetRoomWithDetails(int roomId)
+        {
+            return await _context.Rooms.Include(r => r.RoomType).FirstOrDefaultAsync(r => r.RoomId == roomId);
+        }
+
+        private void ValidateReservation(Reservation reservation, Room room)
+        {
+            if (reservation.CheckInDate >= reservation.CheckOutDate)
+            {
+                ModelState.AddModelError("", "Check-out date must be after check-in date.");
+            }
+            if (room == null)
+            {
+                ModelState.AddModelError("", "Selected room does not exist.");
+            }
+        }
+
+        private async Task DeleteReservationById(int id)
+        {
+            var sqlQuery = "DELETE FROM Reservation WHERE ReservationID = @id";
+            await _context.Database.ExecuteSqlRawAsync(sqlQuery, new SqlParameter("@id", id));
+        }
 
         private bool ReservationExists(int id)
         {
@@ -224,6 +200,13 @@ namespace DataBase.Controllers
         {
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName", reservation?.CustomerId);
             ViewData["RoomId"] = new SelectList(_context.Rooms.Include(room => room.RoomType), "RoomId", "TypeAndNumber", reservation?.RoomId);
+        }
+
+        private void SetReservationTotalPrice(Reservation reservation, RoomType? roomType)
+        {
+            int numberOfDays = (reservation.CheckOutDate - reservation.CheckInDate).Days;
+            if (roomType != null)
+                reservation.TotalPrice = numberOfDays * roomType.Price;
         }
     }
 }

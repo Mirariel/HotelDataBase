@@ -4,10 +4,10 @@ namespace DataBase.Extensions
 {
     public static class ControllerRedirectsExtensions
     {
-        public static IActionResult RedirectWithTempError(this Controller controller, string errorMessage, string redirectTo, object? routeValues = null)
+        public static IActionResult ViewWithTempError(this Controller controller, string errorMessage, string redirectTo, object? routeValues = null)
         {
             controller.TempData["Error"] = errorMessage;
-            return controller.RedirectToAction(redirectTo, routeValues);
+            return controller.View(redirectTo, routeValues);
         }
         public static IActionResult ViewWithModelError(this Controller controller, string errorMessage, string viewName, object? routeValues = null)
         {

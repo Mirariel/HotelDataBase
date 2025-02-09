@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataBase.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -22,24 +17,14 @@ namespace DataBase.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Customers.ToListAsync());
+            var customers = await GetCustomersAsync();
+            return View(customers);
         }
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            return View(customer);
+            var customer = await GetCustomerByIdAsync(id);
+            return customer == null ? NotFound() : View(customer);
         }
 
         public IActionResult Create()
@@ -51,28 +36,17 @@ namespace DataBase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CustomerId,FirstName,LastName,Birthday,Phone,Email,PassportNumber,Address")] Customer customer)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(customer);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(customer);
+            if (!ModelState.IsValid)
+                return View(customer);
+
+            await AddCustomerAsync(customer);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-            return View(customer);
+            var customer = await GetCustomerByIdAsync(id);
+            return customer == null ? NotFound() : View(customer);
         }
 
         [HttpPost]
@@ -80,64 +54,69 @@ namespace DataBase.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("CustomerId,FirstName,LastName,Birthday,Phone,Email,PassportNumber,Address")] Customer customer)
         {
             if (id != customer.CustomerId)
-            {
                 return NotFound();
-            }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(customer);
+
+            try
             {
-                try
-                {
-                    _context.Update(customer);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CustomerExists(customer.CustomerId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                await UpdateCustomerAsync(customer);
             }
-            return View(customer);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CustomerExists(customer.CustomerId))
+                    return NotFound();
+                throw;
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            return View(customer);
+            var customer = await GetCustomerByIdAsync(id);
+            return customer == null ? NotFound() : View(customer);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            await RemoveCustomerAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<List<Customer>> GetCustomersAsync()
+        {
+            return await _context.Customers.ToListAsync();
+        }
+
+        private async Task<Customer?> GetCustomerByIdAsync(int? id)
+        {
+            return id == null ? null : await _context.Customers.FirstOrDefaultAsync(m => m.CustomerId == id);
+        }
+
+        private async Task AddCustomerAsync(Customer customer)
+        {
+            _context.Add(customer);
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task UpdateCustomerAsync(Customer customer)
+        {
+            _context.Update(customer);
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task RemoveCustomerAsync(int id)
+        {
             var customer = await _context.Customers.FindAsync(id);
             if (customer != null)
             {
                 _context.Customers.Remove(customer);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
-
         private bool CustomerExists(int id)
         {
             return _context.Customers.Any(e => e.CustomerId == id);
