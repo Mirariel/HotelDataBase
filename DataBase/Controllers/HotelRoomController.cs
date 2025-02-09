@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DataBase.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
+using DataBase.Extensions;
 
 namespace DataBase.Controllers
 {
@@ -33,8 +33,7 @@ namespace DataBase.Controllers
         {
             if (string.IsNullOrWhiteSpace(request.Customer.PassportNumber))
             {
-                ModelState.AddModelError("", "Номер паспорта обов'язковий для бронювання.");
-                return View("Error", "Помилка валідації.");
+                return this.ViewWithModelError("Номер паспорта обов'язковий для бронювання.", "Error", "Помилка валідації.");
             }
 
             var existingCustomer = _context.Customers.FirstOrDefault(c => c.PassportNumber == request.Customer.PassportNumber);
@@ -47,8 +46,7 @@ namespace DataBase.Controllers
                     string.IsNullOrWhiteSpace(request.Customer.Email) ||
                     string.IsNullOrWhiteSpace(request.Customer.Address))
                 {
-                    ModelState.AddModelError("", "Для створення нового користувача потрібно заповнити всі поля.");
-                    return View("Error", "Помилка створення користувача.");
+                    return this.ViewWithModelError("Для створення нового користувача потрібно заповнити всі поля.", "Error", "Помилка створення користувача.");
                 }
 
                 _context.Customers.Add(request.Customer);
@@ -69,7 +67,7 @@ namespace DataBase.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.RoomType = roomType;
+            SetRoomTypeViewBag(int.Parse(roomType));
             return View();
         }
 
@@ -78,11 +76,9 @@ namespace DataBase.Controllers
         {
             if (checkInDate == default || checkOutDate == default || checkInDate >= checkOutDate)
             {
-                ViewBag.RoomType = roomType;
-                ViewBag.CheckInDate = checkInDate == default ? "" : checkInDate.ToString("yyyy-MM-dd");
-                ViewBag.CheckOutDate = checkOutDate == default ? "" : checkOutDate.ToString("yyyy-MM-dd");
-                TempData["Error"] = "Будь ласка, введіть правильні дати.";
-                return View("SelectDate");
+                SetRoomTypeViewBag(roomType);
+                SetDateViewBag(checkInDate, checkOutDate);
+                return this.RedirectWithTempError("Будь ласка, введіть правильні дати.", nameof(SelectDate));
             }
 
             var availableRooms = _context.Rooms
@@ -96,26 +92,30 @@ namespace DataBase.Controllers
 
             if (!availableRooms.Any())
             {
-                ViewBag.RoomType = roomType;
-                ViewBag.CheckInDate = checkInDate.ToString("yyyy-MM-dd");
-                ViewBag.CheckOutDate = checkOutDate.ToString("yyyy-MM-dd");
-                TempData["Error"] = "На жаль, немає доступних кімнат для обраного типу. Спробуйте вибрати інші дати.";
-                return View("SelectDate");
+                SetRoomTypeViewBag(roomType);
+                SetDateViewBag(checkInDate, checkOutDate);
+                return this.RedirectWithTempError("На жаль, немає доступних кімнат для обраного типу. Спробуйте вибрати інші дати.", nameof(SelectDate));
             }
 
-            ViewBag.CheckInDate = checkInDate.ToString("yyyy-MM-dd");
-            ViewBag.CheckOutDate = checkOutDate.ToString("yyyy-MM-dd");
+            SetDateViewBag(checkInDate, checkOutDate);
             return View(availableRooms);
         }
-
+        private void SetDateViewBag(DateTime checkInDate, DateTime checkOutDate)
+        {
+            ViewBag.CheckInDate = checkInDate == default ? "" : checkInDate.ToString("yyyy-MM-dd");
+            ViewBag.CheckOutDate = checkOutDate == default ? "" : checkOutDate.ToString("yyyy-MM-dd");
+        }
+        private void SetRoomTypeViewBag(int roomType)
+        {
+            ViewBag.RoomType = roomType;
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateReservation(ReservationRequest request)
         {
             if (request.RoomId == 0 || string.IsNullOrWhiteSpace(request.Customer.PassportNumber))
             {
-                TempData["Error"] = "Некоректні дані.";
-                return RedirectToAction("SelectRoomType");
+                return this.RedirectWithTempError("Некоректні дані.", "SelectRoomType");
             }
 
             var existingCustomer = _context.Customers.FirstOrDefault(c => c.PassportNumber == request.Customer.PassportNumber);
@@ -124,8 +124,7 @@ namespace DataBase.Controllers
             {
                 if (string.IsNullOrWhiteSpace(request.Customer.FirstName) || string.IsNullOrWhiteSpace(request.Customer.LastName))
                 {
-                    TempData["Error"] = "Для створення нового користувача потрібно заповнити всі поля.";
-                    return RedirectToAction("AvailableRooms", new { roomType = ViewBag.RoomType, request.CheckInDate, request.CheckOutDate });
+                    return this.RedirectWithTempError("Для створення нового користувача потрібно заповнити всі поля.", "AvailableRooms", new { roomType = ViewBag.RoomType, request.CheckInDate, request.CheckOutDate });
                 }
 
                 _context.Customers.Add(request.Customer);
@@ -174,8 +173,6 @@ namespace DataBase.Controllers
 
             return View(reservation);
         }
-
-
     }
 }
 

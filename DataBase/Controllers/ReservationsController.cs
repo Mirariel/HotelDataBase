@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DataBase.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using DataBase.Models;
 using Microsoft.Data.SqlClient;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataBase.Controllers
 {
@@ -81,8 +77,7 @@ namespace DataBase.Controllers
 
         public IActionResult Create()
         {
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName");
-            ViewData["RoomId"] = new SelectList(_context.Rooms.Include(room => room.RoomType), "RoomId", "TypeAndNumber");
+            SetCustomerRoomViewData();
             return View();
         }
 
@@ -92,8 +87,6 @@ namespace DataBase.Controllers
         {
             try
             {
-
-
                 if (reservation.CheckInDate >= reservation.CheckOutDate)
                 {
                     ModelState.AddModelError("", "Check-out date must be after check-in date.");
@@ -124,9 +117,7 @@ namespace DataBase.Controllers
             {
                 ModelState.AddModelError("", ex.ToString());
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName", reservation.CustomerId);
-            ViewData["RoomId"] = new SelectList(_context.Rooms.Include(room => room.RoomType), "RoomId", "TypeAndNumber", reservation.RoomId);
-
+            SetCustomerRoomViewData(reservation);
             return View(reservation);
         }
 
@@ -142,8 +133,7 @@ namespace DataBase.Controllers
             {
                 return NotFound();
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName", reservation.CustomerId);
-            ViewData["RoomId"] = new SelectList(_context.Rooms.Include(room => room.RoomType), "RoomId", "TypeAndNumber", reservation.RoomId);
+            SetCustomerRoomViewData(reservation);
             return View(reservation);
         }
 
@@ -194,8 +184,7 @@ namespace DataBase.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName", reservation.CustomerId);
-            ViewData["RoomId"] = new SelectList(_context.Rooms.Include(room => room.RoomType), "RoomId", "TypeAndNumber", reservation.RoomId);
+            SetCustomerRoomViewData(reservation);
             return View(reservation);
         }
 
@@ -236,5 +225,10 @@ namespace DataBase.Controllers
             return _context.Reservation.Any(e => e.ReservationId == id);
         }
 
+        private void SetCustomerRoomViewData(Reservation? reservation = null)
+        {
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName", reservation?.CustomerId);
+            ViewData["RoomId"] = new SelectList(_context.Rooms.Include(room => room.RoomType), "RoomId", "TypeAndNumber", reservation?.RoomId);
+        }
     }
 }

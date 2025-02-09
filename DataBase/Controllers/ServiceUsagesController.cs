@@ -82,17 +82,7 @@ namespace DataBase.Controllers
         }
         public IActionResult Create()
         {
-            ViewData["ReservationId"] = new SelectList(
-     _context.Reservation
-         .Include(r => r.Customer)
-         .Include(r => r.Room)
-         .ToList(),
-     "ReservationId",
-     "DisplayText"
- );
-
-            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "NameWithPosition");
-            ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName");
+            SetServiceUsageViewData();
             return View();
         }
 
@@ -106,17 +96,7 @@ namespace DataBase.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ReservationId"] = new SelectList(
-     _context.Reservation
-         .Include(r => r.Customer)
-         .Include(r => r.Room)
-         .ToList(),
-     "ReservationId",
-     "DisplayText",
-     serviceUsage.ReservationId
- );
-            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "NameWithPosition", serviceUsage.EmployeeId);
-            ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName", serviceUsage.ServicesId);
+            SetServiceUsageViewData(serviceUsage);
             return View(serviceUsage);
         }
         public async Task<IActionResult> Edit(int? id)
@@ -131,17 +111,8 @@ namespace DataBase.Controllers
             {
                 return NotFound();
             }
-            ViewData["ReservationId"] = new SelectList(
-     _context.Reservation
-         .Include(r => r.Customer)
-         .Include(r => r.Room)
-         .ToList(),
-     "ReservationId",
-     "DisplayText",
-     serviceUsage.ReservationId
- );
-            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "NameWithPosition", serviceUsage.EmployeeId);
-            ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName", serviceUsage.ServicesId);
+
+            SetServiceUsageViewData(serviceUsage);
             return View(serviceUsage);
         }
 
@@ -174,17 +145,7 @@ namespace DataBase.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ReservationId"] = new SelectList(
-    _context.Reservation
-        .Include(r => r.Customer)
-        .Include(r => r.Room)
-        .ToList(),
-    "ReservationId",
-    "DisplayText",
-    serviceUsage.ReservationId
-);
-            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "NameWithPosition", serviceUsage.EmployeeId);
-            ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName", serviceUsage.ServicesId);
+            SetServiceUsageViewData(serviceUsage);
             return View(serviceUsage);
         }
         public async Task<IActionResult> Delete(int? id)
@@ -227,6 +188,21 @@ namespace DataBase.Controllers
         private bool ServiceUsageExists(int id)
         {
             return _context.ServiceUsage.Any(e => e.UsageId == id);
+        }
+
+        private void SetServiceUsageViewData(ServiceUsage? serviceUsage = null)
+        {
+            ViewData["ReservationId"] = new SelectList(
+                _context.Reservation
+                    .Include(r => r.Customer)
+                    .Include(r => r.Room)
+                    .ToList(),
+                "ReservationId",
+                "DisplayText",
+                serviceUsage?.ReservationId
+            );
+            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeesId", "NameWithPosition", serviceUsage?.EmployeeId);
+            ViewData["ServicesId"] = new SelectList(_context.Services, "ServicesId", "ServicesName", serviceUsage?.ServicesId);
         }
     }
 }
