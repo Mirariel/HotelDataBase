@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using DataBase.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
+using DataBase.Extensions;
 
 namespace DataBase.Controllers
 {
@@ -13,10 +14,20 @@ namespace DataBase.Controllers
     public class RoomsController : Controller
     {
         private readonly HotelDataBaseContext _context;
-
+        private readonly SortingDictionary<Room> _roomSorts = new SortingDictionary<Room>
+        {
+            { "roomtype_desc", r => r.OrderByDescending(x => x.RoomType.TypeName) },
+            { "capacity", r => r.OrderBy(x => x.RoomType.Capacity) },
+            { "capacity_desc", r => r.OrderByDescending(x => x.RoomType.Capacity) },
+            { "price", r => r.OrderBy(x => x.RoomType.Price) },
+            { "price_desc", r => r.OrderByDescending(x => x.RoomType.Price) },
+            { "isavailable", r => r.OrderBy(x => x.IsAvailable) },
+            { "isavailable_desc", r => r.OrderByDescending(x => x.IsAvailable) }
+        };
         public RoomsController(HotelDataBaseContext context)
         {
             _context = context;
+            _roomSorts.SetDefaultSort(r => r.OrderBy(x => x.RoomType.TypeName));
         }
 
         public async Task<IActionResult> Index(string sortOrder)
@@ -26,35 +37,9 @@ namespace DataBase.Controllers
             ViewData["PriceSortParm"] = sortOrder == "price" ? "price_desc" : "price";
             ViewData["IsAvailableSortParm"] = sortOrder == "isavailable" ? "isavailable_desc" : "isavailable";
 
-            var rooms = await _context.Rooms.Include(r => r.RoomType).ToListAsync();
+            var rooms = _context.Rooms.Include(r => r.RoomType).AsQueryable();
 
-            switch (sortOrder)
-            {
-                case "roomtype_desc":
-                    rooms = rooms.OrderByDescending(r => r.RoomType.TypeName).ToList();
-                    break;
-                case "capacity":
-                    rooms = rooms.OrderBy(r => r.RoomType.Capacity).ToList();
-                    break;
-                case "capacity_desc":
-                    rooms = rooms.OrderByDescending(r => r.RoomType.Capacity).ToList();
-                    break;
-                case "price":
-                    rooms = rooms.OrderBy(r => r.RoomType.Price).ToList();
-                    break;
-                case "price_desc":
-                    rooms = rooms.OrderByDescending(r => r.RoomType.Price).ToList();
-                    break;
-                case "isavailable":
-                    rooms = rooms.OrderBy(r => r.IsAvailable).ToList();
-                    break;
-                case "isavailable_desc":
-                    rooms = rooms.OrderByDescending(r => r.IsAvailable).ToList();
-                    break;
-                default:
-                    rooms = rooms.OrderBy(r => r.RoomType.TypeName).ToList();
-                    break;
-            }
+            rooms = _roomSorts.ApplySorting(rooms, sortOrder);
 
             return View(rooms);
         }

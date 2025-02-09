@@ -1,4 +1,5 @@
-﻿using DataBase.Models;
+﻿using DataBase.Extensions;
+using DataBase.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,9 +13,17 @@ namespace DataBase.Controllers
     {
         private readonly HotelDataBaseContext _context;
 
+        private readonly SortingDictionary<Reservation> _reservationSorts = new SortingDictionary<Reservation>
+        {
+            { "checkin_desc", r => r.OrderByDescending(x => x.CheckInDate) },
+            { "totalprice", r => r.OrderBy(x => x.TotalPrice) },
+            { "totalprice_desc", r => r.OrderByDescending(x => x.TotalPrice) }
+        };
+
         public ReservationsController(HotelDataBaseContext context)
         {
             _context = context;
+            _reservationSorts.SetDefaultSort(r => r.OrderBy(x => x.CheckInDate));
         }
 
         public async Task<IActionResult> Index(string sortOrder, string searchString)
@@ -36,21 +45,7 @@ namespace DataBase.Controllers
                     r.Customer.LastName.Contains(searchString));
             }
 
-            switch (sortOrder)
-            {
-                case "checkin_desc":
-                    reservations = reservations.OrderByDescending(r => r.CheckInDate);
-                    break;
-                case "totalprice":
-                    reservations = reservations.OrderBy(r => r.TotalPrice);
-                    break;
-                case "totalprice_desc":
-                    reservations = reservations.OrderByDescending(r => r.TotalPrice);
-                    break;
-                default:
-                    reservations = reservations.OrderBy(r => r.CheckInDate);
-                    break;
-            }
+            reservations = _reservationSorts.ApplySorting(reservations, sortOrder);
 
             return View(await reservations.ToListAsync());
         }
@@ -112,7 +107,7 @@ namespace DataBase.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-             }
+            }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.ToString());
